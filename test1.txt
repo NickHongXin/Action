@@ -1,5 +1,11 @@
 for rebase
 test
 rebased
+<<<<<<< HEAD
 zhoujianwei added a line
+=======
+squash
+zhoujianwei added a line
+squash
+>>>>>>> mysquash
 
