@@ -1,4 +1,4 @@
 for rebase
 test
 rebased
-
+squash
