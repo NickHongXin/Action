@@ -19,7 +19,11 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options:{
-            presets: ['react', 'env']
+            presets: ['react', 'env', 'stage-0'],
+            plugins: [
+              'transform-class-properties',
+              ['import', [{ libraryName: 'antd', style: true }]]
+            ]
           }
         }
       },
@@ -31,7 +35,9 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        use: ['style-loader', 'css-loader', 'less-loader']
+        use: ExtractTextPlugin.extract({
+          fallback: 'style-loader',
+          use: ['css-loader', 'less-loader']})
       }
     ]
   },

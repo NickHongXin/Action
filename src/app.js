@@ -1,18 +1,18 @@
 import React, {Component} from 'react'
 import ReactDom from 'react-dom'
-import './app.css'
-import './app.less'
+import {Button} from 'antd'
+import Login from './page/login/index.js'
+import Routes from './routes.js'
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware} from 'redux'
+import Reducer from './redux/reducer/reducer.js'
+import thunk from 'redux-thunk'
 
-class App extends Component{
-
-	render(){
-		return (
-			<div className="div divless">hello world, i am Sam shi!</div>
-		)
-	}
-}
+let store = createStore(Reducer, applyMiddleware(thunk))
 
 ReactDom.render(
-	<App />,
+	<Provider store={store}>
+		<Routes />
+	</Provider>,
 	document.getElementById("app")
 )

@@ -19,7 +19,11 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options:{
-            presets: ['react', 'env']
+            presets: ['react', 'env', 'stage-0'],
+            plugins: [
+              'transform-class-properties',             
+              ['import', [{ libraryName: 'antd', style: true }]]
+            ]
           }
         }
       },
