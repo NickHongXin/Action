@@ -1,8 +1,0 @@
-for rebase
-test
-rebased
-zhoujianwei added a line
-squash
-what the shit
-hello how are you
-master rebase
