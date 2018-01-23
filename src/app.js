@@ -5,7 +5,7 @@ import {createStore, combineReducers} from 'redux'
 import userReducers from '../redux/reducer'
 import Routes from './route'
 
-const store = createStore(combineReducers({user:userReducers}))
+const store = createStore(combineReducers({userReducers}))
 
 ReactDOM.render(
 	<Provider store={store}>

@@ -34,6 +34,7 @@ app.post('/user/confirm', (request, response) => {
 	console.log(request.body)
 	result = request.body.data;
 	result.Id = Math.floor(Math.random()*1000)
+	userInfo.push(result)
 	response.json(result);
 })
 

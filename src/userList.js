@@ -72,12 +72,4 @@ class UserList extends React.Component{
 	}
 }
 
-const mapStateToProps = (state) => ({
-	username: state.user.uname
-})
-
-const mapDispatchToProps = (dispatch) => ({
-	userActions: bindActionCreators(userActionCreators, dispatch)
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(UserList)
+export default UserList

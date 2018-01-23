@@ -7,3 +7,7 @@ export const userConfirmAction = (data) => ({
 	type:'USER_CONFIRM',
 	data
 })
+
+export const disableSaveButton = () => ({
+	type:'DISABLE_BUTTON'
+})

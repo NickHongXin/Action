@@ -6,7 +6,7 @@ import {Checkbox} from 'react-toolbox/lib/checkbox'
 import {Dropdown} from 'react-toolbox/lib/dropdown';
 import {DatePicker} from 'react-toolbox/lib/date_picker';
 import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table';
-import * as api from './api.js'
+import * as api from './api'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as userActionCreators from '../redux/action'
@@ -22,7 +22,7 @@ const countries = [
 class UserCreation extends React.Component{
 	constructor(props){
 		super(props)
-		this.state={
+		this.state = {
 			uname:'',
 			email:'',
 			gender:'',
@@ -39,6 +39,7 @@ class UserCreation extends React.Component{
 	}
 
 	handleSubmit = () => {
+		alert(this.props.isDisabled)
 		let newUserInfos = []
 		api.postConfirmUser({}, {
 			Id: -1,
@@ -56,7 +57,7 @@ class UserCreation extends React.Component{
 	  	});
 	}
 
-	render(){
+	render = () => {
 		return (
 			<section >
 		        <Input type='text' label='Name' value={this.state.uname} onChange={this.handleChange.bind(this, 'uname')} />
@@ -72,6 +73,7 @@ class UserCreation extends React.Component{
 		        />
 		        <Dropdown
 			        auto
+			        label='Country'
 			        onChange={this.handleChange.bind(this, 'country')}
 			        source={countries}
 			        value={this.state.country}
@@ -84,20 +86,23 @@ class UserCreation extends React.Component{
 		          value={this.state.birthday}
 		          sundayFirstDayOfWeek
 		        />
-				<Button label='Save' primary raised onClick={this.handleSubmit.bind(this)} style={{width:'100%'}}/>
+				<Button disabled={this.props.isDisabled} label='Save' primary raised onClick={this.handleSubmit.bind(this)} style={{width:'100%'}}/>
+				<Button label='Disable/Enable Save Button' primary raised onClick={this.props.userActions.disableSaveButton} style={{width:'100%'}}/>
 			</section>
 		)
 	}
-
 }
 
+UserCreation.defaultProps = {
+	isDisabled: false
+}
 
 // const mapStateToProps = (state) => {
-// 	return { uname: state.uname }
+// 	return { isDisabled: state.isDisabled }
 // }
 
 const mapStateToProps = (state) => ({
-	username: state.user.uname
+	isDisabled: state.userReducers.isDisabled
 })
 
 // 通过bindActionCreators绑定多个action到User组件
