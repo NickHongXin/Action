@@ -1,17 +1,15 @@
 
 let initState = {
-	uname: '',
-	isDisabled: false
+	isDisabled: false,
+	userInfoArray:[]
 }
 
 const userReducers = (state=initState, action) => {
 	switch(action.type){
-		case 'USER_INFO':
-			return {...state, uname: action.id};
-		case 'USER_CONFIRM':
-			return state;
 		case 'DISABLE_BUTTON':
-			return {...state, isDisabled: state.isDisabled ? false : true};
+			return {...state, isDisabled: action.isDisabled};
+		case 'SHOW_USERINFO':
+			return {...state, userInfoArray: action.data};
 		default:
 			return state;
 	}

@@ -9,7 +9,6 @@ export const getUserInfo = (id) => {
 }
 
 export const postConfirmUser = (params={}, data={}) => {
-	console.log(data)
 	return instance.post('/user/confirm',{
 		params:params, 
 		data:data, 

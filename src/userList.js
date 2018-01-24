@@ -4,7 +4,7 @@ import { Table, TableHead, TableRow, TableCell } from 'react-toolbox/lib/table';
 import * as api from './api.js'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
-import * as userActionCreators from '../redux/action'
+import {fetchUserInfo} from '../redux/action'
 
 class UserList extends React.Component{
 	constructor(props){
@@ -15,11 +15,7 @@ class UserList extends React.Component{
 	}
 
 	componentDidMount = () => {
-		api.getUserInfo().then(res => {
-			this.setState({...this.state, userInfos: res.data})
-		}).catch(function (error) {
-		    console.log(error);
-	  	});
+		this.props.fetchUserInfo();
 	}
 
 	fetchUserInfo = (id) => {
@@ -45,7 +41,7 @@ class UserList extends React.Component{
 	render(){
 		return (
 			<section >
-				<Button label='fetch user1' primary raised onClick={this.fetchUserInfo.bind(this, 1)}/>
+				<Button label='fetch user1' primary raised onClick={this.fetchUserInfo.bind(this, 1)} style={{marginLeft:'10px'}} />
 				<Button label='fetch user2' primary raised onClick={this.fetchUserInfo.bind(this, 2)} style={{marginLeft:'10px'}} />
 				<Table multiSelectable>
 			        <TableHead>
@@ -56,7 +52,7 @@ class UserList extends React.Component{
 			          <TableCell >IsMarried</TableCell>
 			          <TableCell >Country</TableCell>
 			        </TableHead>
-			        {this.state.userInfos.map((item, idx) => (
+			        {this.props.userInfoArray.map((item, idx) => (
 			          <TableRow key={idx}>
 			            <TableCell >{item.Id}</TableCell>
 			            <TableCell >{item.Name}</TableCell>
@@ -72,4 +68,16 @@ class UserList extends React.Component{
 	}
 }
 
-export default UserList
+const mapStateToProps = (state) => {
+	return {
+		userInfoArray: state.userReducers.userInfoArray
+	}
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		fetchUserInfo: () => dispatch(fetchUserInfo())
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(UserList)

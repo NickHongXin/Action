@@ -34,27 +34,39 @@ class UserCreation extends React.Component{
 	}
 
 	handleChange = (field, value) => {
-		console.log(field)
 		this.setState({...this.state, [field]: value});
 	}
 
 	handleSubmit = () => {
-		alert(this.props.isDisabled)
+		this.props.userActions.disableSaveButton(true)
 		let newUserInfos = []
-		api.postConfirmUser({}, {
-			Id: -1,
-			Name: this.state.uname,
-			Email: this.state.email,
-			Gender: this.state.gender,
-			IsMarried: this.state.isMarried,
-			Country: this.state.country
-		}).then(res => {
+		api.postConfirmUser({}, this.generateUserInfo())
+		.then(res => {
 			newUserInfos.push(res.data)
 			this.setState({...this.state, userInfos: newUserInfos})
 			this.props.history.push('/show')
 		}).catch(function (error) {
 		    console.log(error);
 	  	});
+	}
+
+	handleAsyncSubmit = () => {
+		this.props.userActions.addUser(this.generateUserInfo(), this.props.history);
+	}
+
+	generateUserInfo = () => {
+		return {
+			Id: -1,
+			Name: this.state.uname,
+			Email: this.state.email,
+			Gender: this.state.gender,
+			IsMarried: this.state.isMarried,
+			Country: this.state.country
+		};
+	}
+
+	componentWillMount = () => {
+		this.props.userActions.disableSaveButton(false)
 	}
 
 	render = () => {
@@ -87,7 +99,7 @@ class UserCreation extends React.Component{
 		          sundayFirstDayOfWeek
 		        />
 				<Button disabled={this.props.isDisabled} label='Save' primary raised onClick={this.handleSubmit.bind(this)} style={{width:'100%'}}/>
-				<Button label='Disable/Enable Save Button' primary raised onClick={this.props.userActions.disableSaveButton} style={{width:'100%'}}/>
+				<Button disabled={this.props.isDisabled} label='Async Save' primary raised onClick={this.handleAsyncSubmit.bind(this)} style={{width:'100%', marginTop:'10px'}}/>
 			</section>
 		)
 	}
@@ -97,26 +109,12 @@ UserCreation.defaultProps = {
 	isDisabled: false
 }
 
-// const mapStateToProps = (state) => {
-// 	return { isDisabled: state.isDisabled }
-// }
+const mapStateToProps = (state) => {
+	return { isDisabled: state.userReducers.isDisabled }
+}
 
-const mapStateToProps = (state) => ({
-	isDisabled: state.userReducers.isDisabled
-})
-
-// 通过bindActionCreators绑定多个action到User组件
 const mapDispatchToProps = (dispatch) => ({
 	userActions: bindActionCreators(userActionCreators, dispatch)
 })
-
-//绑定单个action到User组件
-// const mapDispatchToProps = (dispatch) => {
-// 	return {
-// 		handleSubmit:(id) => {
-// 			dispatch(userActionCreators.userInfoAction(id))
-// 		}
-// 	}
-// }
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserCreation)

@@ -26,8 +26,7 @@ app.get('/user/info', (request, response) => {
 	} else {
 		result = userInfo;
 	}
-	
-  	response.json(result)
+	setTimeout(function(){response.json(result)}, 3000)
 })
 
 app.post('/user/confirm', (request, response) => {
@@ -35,7 +34,7 @@ app.post('/user/confirm', (request, response) => {
 	result = request.body.data;
 	result.Id = Math.floor(Math.random()*1000)
 	userInfo.push(result)
-	response.json(result);
+	setTimeout(function(){response.json(result)}, 3000)
 })
 
 app.listen(port, (err) => {
