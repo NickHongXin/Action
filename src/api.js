@@ -1,7 +1,9 @@
 import axios from 'axios'
+import apiCongfig from './config.js'
+const config = apiCongfig()
 
 const instance = axios.create({
-  baseURL: 'http://localhost:3000'
+  baseURL: config.baseURL
 });
 
 export const getUserInfo = (id) => {

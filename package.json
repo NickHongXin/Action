@@ -21,24 +21,40 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-toolbox": "^2.0.0-beta.12",
-    "sleep": "^5.1.1",
     "style-loader": "^0.19.1",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.10.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack",
-    "start": "webpack-dev-server --hot --inline --host 0.0.0.0",
-    "server": "node ./server/server.js"
+    "build:dev": "webpack --env=dev --progress --profile --colors",
+    "build:prod": "webpack --env=prod --progress --profile --colors -p",
+    "start": "webpack-dev-server --env=dev --hot --inline --host 0.0.0.0",
+    "server": "node ./server/server.js",
+    "toolbox": "react-toolbox-themr"
   },
   "devDependencies": {
+    "babel-eslint": "^8.2.1",
     "body-parser": "^1.18.2",
+    "eslint": "^4.16.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-react": "^7.5.1",
     "express": "^4.16.2",
     "immutable": "^3.8.2",
     "react-redux": "^5.0.6",
+    "react-toolbox-themr": "^1.0.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "webpack-merge": "^4.1.1"
+  },
+  "reactToolbox": {
+    "include": [
+      "BUTTON"
+    ],
+    "customProperties": {
+      "button-height": "10"
+    },
+    "output": "src/css"
   }
 }

@@ -10,6 +10,8 @@ import * as api from './api'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import * as userActionCreators from '../redux/action'
+import RTButton from 'react-toolbox/lib/button/Button'
+import PropTypes from 'prop-types';
 
 const countries = [
   { value: 'England', label: 'England' },
@@ -46,6 +48,7 @@ class UserCreation extends React.Component{
 			this.setState({...this.state, userInfos: newUserInfos})
 			this.props.history.push('/show')
 		}).catch(function (error) {
+			console.log(this.props.router)
 		    console.log(error);
 	  	});
 	}
@@ -100,6 +103,7 @@ class UserCreation extends React.Component{
 		        />
 				<Button disabled={this.props.isDisabled} label='Save' primary raised onClick={this.handleSubmit.bind(this)} style={{width:'100%'}}/>
 				<Button disabled={this.props.isDisabled} label='Async Save' primary raised onClick={this.handleAsyncSubmit.bind(this)} style={{width:'100%', marginTop:'10px'}}/>
+				<RTButton label='RTButton' raised primary style={{width:'100%', marginTop:'10px'}}/>
 			</section>
 		)
 	}
@@ -108,6 +112,10 @@ class UserCreation extends React.Component{
 UserCreation.defaultProps = {
 	isDisabled: false
 }
+
+// UserCreation.contextTypes = {
+// 	router: PropTypes.object.isRequired
+// };
 
 const mapStateToProps = (state) => {
 	return { isDisabled: state.userReducers.isDisabled }

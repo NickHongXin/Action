@@ -1,4 +1,3 @@
-
 let initState = {
 	isDisabled: false,
 	userInfoArray:[]

@@ -16,7 +16,7 @@ class User extends React.Component{
 			<section >
 				<div style={{width:'50%', paddingLeft:'25%', paddingTop:'10%'}}>
 					<UserNav />
-			        <UserRoute />
+					<UserRoute />
 				</div>
 			</section>
 		)

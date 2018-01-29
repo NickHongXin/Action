@@ -1,15 +1,24 @@
 import React from 'react'
-import {BrowserRouter} from 'react-router-dom'
-import {Route} from 'react-router'
+import {Route, Switch} from 'react-router'
 import UserCreation from './userCreation'
 import UserList from './userList'
 
 const UserRoutes = () => {
 	return (
-		<div>
-			<Route path='/add' component={UserCreation} />
-			<Route path='/show' component={UserList} />
-		</div>
+		<Switch>
+			<Route path='/add' render={
+				(props) => {
+					console.log(`match: ${JSON.stringify(props.match)}`)
+					console.log(`location: ${JSON.stringify(props.location)}`)
+					console.log(`history: ${JSON.stringify(props.history)}`)
+					return <UserCreation {...props}/>}
+			}/>
+			<Route path='/show' children = {
+				({match}) => {
+					return match ? <UserList /> : <h1>Not Found!</h1>
+				}
+			} />
+		</Switch>
 	)
 }
 
