@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import HospitalCss from '../../css/HospitalAccountEditor.css';
+import HospitalCss from '../../css/AccountEditor.css';
 import Dialog from 'react-toolbox/lib/dialog';
+import theme from '../../css/dialog.css';
 
 class HospitalAccountEditor extends Component {
 
@@ -10,10 +11,8 @@ class HospitalAccountEditor extends Component {
 
   render () {
     return (
-      <div>
-        <Dialog active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
-          <form>
-            <table className={HospitalCss.Htable} align="center">
+        <Dialog theme={theme} active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
+            <table className={HospitalCss.htable} align="center">
               <tbody>
                 <tr>
                   <td>■ 医療機関ID</td>
@@ -63,12 +62,9 @@ class HospitalAccountEditor extends Component {
                 </tr>
               </tbody>
             </table>
-          </form>
         </Dialog>
-      </div>
     );
   }
 }
-
 
 export default HospitalAccountEditor;

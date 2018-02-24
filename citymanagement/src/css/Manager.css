@@ -1,105 +1,129 @@
-.tableMain{
-	margin-top:30px;
-	border-collapse:collapse;
-	border-width: 2px;
-	width:90%;
-	cellspacing:"0";
+.management{
+	border:2px solid;
+	margin: -7px;
 }
 
-.margin12{
-	background-color:#4682B4;
-	width:100%;
-	height: 100%;
-	
+.title_header {
+  background-color: #3569bb;
+  color: #FFFFFF;
+  height: 60px;
+  width: 100%;
+
+}
+
+.emptyArea{
+	border-top: 2px solid;
+	height: 60px;
+	width: 100%;
+}
+
+.buttonArea{
+	border-top: 2px solid;
+	height: 80px;
+}
+
+.content{
+	border-top: 2px solid;
+	height: 600px;
+	padding-top: 20px;
+}
+
+.accountSearch{
+	width: 95%;
+	margin-left: 2.5%;
 }
 
 .l_f{
 	color:#FFFFFF;
-	width:200px;
 	display: inline;
-	font-weight:bold;
-	font-size: 14px;
+	font-weight:100;
+	font-size: 40px;
+	height: 100%;
+	float:left;
 	padding-left: 10px;
 }
-.r_f{
 
+.r_f{
 	float:right;
 	display: inline;
-
+	height: 100%;
+	width: 50%;
+	text-align: right;
 }
 
-.bt1{
+.btn_setup{
 	margin-right:5px;
 	background-color:#4F94CD;
 	border-radius:5px;
-	width:70px;
-	height:24px;
+	width:150px;
+	height:100%;
 	border-style:solid;
 	border-color:#000000;
 	border-width: 2px;
 }
 
-.bt2{
+.btn_logout{
 	margin-right:5px;
 	background-color:#FFFFFF;
 	border-radius:5px;
-	width:80px;
-	height:24px;
+	width:150px;
+	height:100%;
 	border-style:solid;
 	border-color:#000000;
-	font-size:8px;
 	border-width: 2px;
 }
-.user{
-	color:#FFFFFF;
-	float:right;
-	display: inline;
-	margin-right:10px;
-	font-weight:bold;
-	font-size: 14px;
-	padding-right: 16px;
-}
 
-.sp{
-	background-color:#FFFFFF;
-	height:30px;
-}
-.Hospital{
+.hospital{
 	display: inline;
-	width:200px;
-	height:40px;
+	width:350px;
+	height:85%;
 	border-radius:5px;
 	border-style:solid;
 	border-color:#000000;
-	font-size:15px;
+	font-size:24px;
+	font-weight:100;
 	border-width: 2px;
-	margin:5px;
 	background-color:#ffffff;
+	margin-left: 10px;
+	margin-top: 5px;
 }
 
-.from{
-	display:inline;
-	margin-left:33px;
+.btn_background_color{
+	background-color: #a1bfff;
+}
+
+.searchArea{
 	font-weight:bold;
-	font-size: 14px;
+	font-size: 24px;
+	width: 100%;
+}
+
+.listArea{
+	margin-top: 30px;
+	max-height: 450px;
+	overflow-y: auto;
+	width:100%;
+}
+
+.span{
+	height: 100%;
+	margin-right: 10px;
+	font-size: 20px;
 }
 
 .text{
 	border-radius:5px;
 	border-style:solid;
-	border-width: 1px;
-	width:150px;
-	height:23px;
-	margin:10px;
+	border-width: 2px;
+	width:200px;
 }
 
-.select{
+.search{
 	border-radius:5px;
 	border-style:solid;
 	border-color:#4682B4;
-	width:80px;
-	height:30px;
-	font-size:12px;
+	width:100px;
+	height:35px;
 	border-width: 1px;
 	margin:5px;
 	background-color:#ffffff;
@@ -109,18 +133,15 @@
 	display:inline;
 	float:right;
 	margin-top:5px;
-	margin-right:40px;
 	border-radius:5px;
 	border-style:solid;
 	border-color:#000000;
 	border-width: 1px;
-	width:100px;
-	height:35px;
+	width:150px;
+	height:45px;
+	font-size: 20px;
 	background-color:#FFFFFF;
-
 }
-
-
 
 .edit{
 	border-radius:5px;
@@ -128,41 +149,36 @@
 	border-color:#000000;
 	border-width: 1px;
 	background-color:#FFFFFF;
-	
 	height:28px;
 	width: 90px;
 	font-size: 17px;
 }
 
 .intable{
-	width:90%;
+	width:100%;
 }
 
 .intable,th,tr,td{
-
-	border:1px solid #000000;
+	border:2px solid #000000;
 	border-collapse:collapse;
-	height:30px;
-
-	font-size:10px;
+	font-size:20px;
 	margin-bottom:50px;
+	text-align: left;
+}
 
+.intable>thead>tr{
+	height: 28px;
 }
-.intable>tr{
-	height: 50px;
-}
-.intable>tbody>td{
-	width: 0px;
-}
-.trth{
-	height: 18px;
 
+.intable>tbody>tr{
+	height: 68px;
 }
+
 .intable>tbody>tr>td:last-of-type{
 	text-align:center;
 }
 
-.HospitalSe{
-	border:1px solid;
-	border-top-width:0px;
+.intable>tbody>tr>td:first-of-type{
+	text-align:right;
 }
+

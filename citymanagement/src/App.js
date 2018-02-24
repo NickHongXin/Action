@@ -3,9 +3,7 @@ import ManagerScreen from './components/ManagerScreen/ManagerScreen';
 class App extends Component {
   render() {
     return(
-      <div>
   		<ManagerScreen/>
-      </div>
     );
   }
 }
