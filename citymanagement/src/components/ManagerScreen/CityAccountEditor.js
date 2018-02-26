@@ -15,23 +15,23 @@ class CityAccountEditor extends Component {
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体コード</td>
-	                    <td><input type="text"/></td> 
+	                    <td><input type="text" className={HospitalCss.text}/></td> 
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体名</td>
-	                    <td><input type="text"/></td>    
+	                    <td><input type="text" className={HospitalCss.text}/></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ アカウント名</td>
-	                    <td><input type="text"/></td>    
+	                    <td><input type="text" className={HospitalCss.text}/></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ ログインID</td>
-	                    <td><input type="text"/></td>    
+	                    <td><input type="text" className={HospitalCss.text}/></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ パスワード</td>
-	                    <td><input type="text"/></td>    
+	                    <td><input type="text" className={HospitalCss.text}/></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ 権限</td>

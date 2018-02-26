@@ -1,0 +1,59 @@
+.paging {
+	padding-bottom: 15px;
+	font-size: 12px;
+}
+
+.link {
+
+	display: table;
+	float: left;
+	line-height: 1;
+	margin-right: 5px;
+}
+
+.link span {
+	color: #dadada;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.link span a {
+	color: #4472C4;
+	font-weight: bold;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.link_left {
+	display: table-cell;
+	padding-right: 8px;
+}
+
+.link_right {
+	display: table-cell;
+	padding-left: 8px;
+}
+
+.textlink {
+	float:left;
+	display: table;
+	padding-top: -15px;
+}
+
+.textlink li {
+	display: table-cell;
+	color: #dadada;
+	border-right: 1px solid #dfdfdf;
+	padding: 0 8px;
+	line-height: 1;
+}
+
+.textlink li:last-child {
+	border: none;
+}
+
+.textlink li a {
+	font-size: 14px;
+	text-decoration: none;
+	color: #4472C4;
+}

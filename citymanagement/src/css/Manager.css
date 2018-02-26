@@ -1,19 +1,18 @@
 .management{
 	border:2px solid;
-	margin: -7px;
 }
 
 .title_header {
-  background-color: #3569bb;
+  background-color: #4472C4;
   color: #FFFFFF;
-  height: 60px;
+  height: 40px;
   width: 100%;
 
 }
 
 .emptyArea{
 	border-top: 2px solid;
-	height: 60px;
+	height: 40px;
 	width: 100%;
 }
 
@@ -37,10 +36,10 @@
 	color:#FFFFFF;
 	display: inline;
 	font-weight:100;
-	font-size: 40px;
+	font-size: 28px;
 	height: 100%;
 	float:left;
-	padding-left: 10px;
+	padding-left: 20px;
 }
 
 .r_f{
@@ -53,43 +52,59 @@
 
 .btn_setup{
 	margin-right:5px;
-	background-color:#4F94CD;
-	border-radius:5px;
-	width:150px;
+	background-color:#5B9BD5;
+	border-radius:8px;
+	width:21%;
 	height:100%;
 	border-style:solid;
 	border-color:#000000;
 	border-width: 2px;
+	outline:none;
+	font-size: 20px;
+	font-weight: bold;
+	word-break:keep-all;
 }
 
 .btn_logout{
 	margin-right:5px;
 	background-color:#FFFFFF;
-	border-radius:5px;
-	width:150px;
+	border-radius:8px;
+	width:21%;
 	height:100%;
 	border-style:solid;
 	border-color:#000000;
 	border-width: 2px;
+	outline:none;
+	font-size: 1vw;
+	word-break:keep-all;
+
+}
+
+.loginUser{
+	padding:20px;
+	font-weight: bold;
+	font-size: 20px;
 }
 
 .hospital{
 	display: inline;
-	width:350px;
+	width:35%;
 	height:85%;
-	border-radius:5px;
+	border-radius:15px;
 	border-style:solid;
 	border-color:#000000;
-	font-size:24px;
+	font-size:2vw;
 	font-weight:100;
 	border-width: 2px;
 	background-color:#ffffff;
 	margin-left: 10px;
 	margin-top: 5px;
+	outline:none;
+	word-break:keep-all;
 }
 
 .btn_background_color{
-	background-color: #a1bfff;
+	background-color: #9DC3E6;
 }
 
 .searchArea{
@@ -116,6 +131,9 @@
 	border-style:solid;
 	border-width: 2px;
 	width:200px;
+	height: 25px;
+	outline:none;
+	margin: 10px;
 }
 
 .search{
@@ -123,17 +141,18 @@
 	border-style:solid;
 	border-color:#4682B4;
 	width:100px;
-	height:35px;
+	height:33px;
 	border-width: 1px;
-	margin:5px;
+	margin:10px;
 	background-color:#ffffff;
+	outline:none;
 }
 
 .new{
 	display:inline;
 	float:right;
 	margin-top:5px;
-	border-radius:5px;
+	border-radius:8px;
 	border-style:solid;
 	border-color:#000000;
 	border-width: 1px;
@@ -141,6 +160,8 @@
 	height:45px;
 	font-size: 20px;
 	background-color:#FFFFFF;
+	outline:none;
+	font-weight: bold;
 }
 
 .edit{
@@ -152,6 +173,7 @@
 	height:28px;
 	width: 90px;
 	font-size: 17px;
+	outline:none;
 }
 
 .intable{
@@ -182,3 +204,59 @@
 	text-align:right;
 }
 
+
+.paging {
+	padding-bottom: 15px;
+}
+
+.link {
+	display: table;
+	float: left;
+	line-height: 1;
+	margin-right: 5px;
+}
+
+.link span {
+	color: #dadada;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.link span a {
+	color: #0aa985;
+	font-weight: bold;
+	font-size: 14px;
+	text-decoration: none;
+}
+
+.link_left {
+	display: table-cell;
+	padding-right: 8px;
+}
+
+.link_right {
+	display: table-cell;
+	padding-left: 8px;
+}
+
+.textlink {
+	display: table;
+}
+
+.textlink li {
+	display: table-cell;
+	color: #dadada;
+	border-right: 1px solid #dfdfdf;
+	padding: 0 8px;
+	line-height: 1;
+}
+
+.textlink li:last-child {
+	border: none;
+}
+
+.textlink li a {
+	font-size: 14px;
+	text-decoration: none;
+	color: #0aa985;
+}
