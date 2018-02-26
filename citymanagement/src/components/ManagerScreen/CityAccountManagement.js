@@ -1,20 +1,35 @@
 import React,{ Component } from 'react';
 import Manager from '../../css/Manager.css';
 import CityAccountEditor from './CityAccountEditor';
+import CityAccountEditorNew from './CityAccountEditorNew';
 
 class CityAccountManagement extends Component {
 	constructor(props){
 		super(props);
 		this.state={
 			isDialogActive:false,
-			cityAccounts:[]
+			isNewDialogActive:false,
+			cityAccounts:[],
+			selectCityAccounts:{},
+			searchCondition:'',
 		}
+	}
+	changeCode = () =>{
+		this.setState({searchCondition:this.refs.SearchCode.value})
 	}
 
     hideOrShowDialog = () => {
 	    this.setState({isDialogActive:!this.state.isDialogActive})
   	}
-  	
+  	hideOrShowDialogNew = () => {
+	    this.setState({isNewDialogActive:!this.state.isNewDialogActive})
+  	}
+  	hideEdit = (item) => {
+  		 this.setState({
+            selectCityAccounts:item,
+        });
+  		this.hideOrShowDialog();
+  	}
   	componentDidMount = () => {
 		const cityAccounts = [
 			{cityName:'A市',cityId:'1',cityCode:'123',managerId:'01'},
@@ -37,9 +52,9 @@ class CityAccountManagement extends Component {
 	    	<div className={Manager.accountSearch}>
 				<div className={Manager.searchArea}>
 					<span className={Manager.span}>自治体アカウント検索</span>
-					<input type="text" className={Manager.text} />
+					<input type="text" className={Manager.text} ref="SearchCode" value={this.state.searchCondition} onChange={this.changeCode}/>
 					<button className={Manager.search} >検索 </button>
-					<button className={Manager.new} onClick={() => this.hideOrShowDialog(true)}>新規</button>
+					<button className={Manager.new} onClick={() => this.hideOrShowDialogNew(true)}>新規</button>
 				</div>
 				<div className={Manager.listArea}>
 					<table className={Manager.intable}>
@@ -62,14 +77,15 @@ class CityAccountManagement extends Component {
 										<td>{item.cityId}</td>
 										<td>{item.cityCode}</td>
 										<td>{item.managerId}</td>
-										<td><button type="button" className={Manager.edit} onClick={() => this.hideOrShowDialog(true)}>編集</button></td>
+										<td><button type="button" className={Manager.edit} onClick={() => this.hideEdit(item)}>編集</button></td>
 									</tr>
 								))
 							}
 						</tbody>
 					</table>
 				</div>
-				<CityAccountEditor isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog}  />
+				<CityAccountEditorNew isActive={this.state.isNewDialogActive} hideDialog={this.hideOrShowDialogNew}  />
+				<CityAccountEditor isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog}  CityInfo={this.state.selectCityAccounts}/>
 			</div>
 	    );
     }

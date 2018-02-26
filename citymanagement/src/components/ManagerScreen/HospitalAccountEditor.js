@@ -2,8 +2,24 @@ import React, { Component } from 'react';
 import HospitalCss from '../../css/AccountEditor.css';
 import Dialog from 'react-toolbox/lib/dialog';
 import theme from '../../css/dialog.css';
+import DeleteCom from './DeleteCom';
+import ConfirmCom from './ConfirmCom';
 
 class HospitalAccountEditor extends Component {
+  constructor(props){
+    super(props);
+    this.state={
+      isDialogActive:false,
+      isConfimActive:false
+    }
+  }
+
+  hideOrShowDialogDel = () => {
+     this.setState({isDialogActive:!this.state.isDialogActive})
+  }
+  hideOrShowDialogCon = () => {
+     this.setState({isConfimActive:!this.state.isConfimActive})
+  }
 
   hide = () => {
     this.props.hideDialog();
@@ -53,15 +69,17 @@ class HospitalAccountEditor extends Component {
                 <tr></tr>
                 <tr>
                   <td>
-                      <input type="button" value="削除" />
+                      <input type="button" value="削除" onClick={() => this.hideOrShowDialogDel(true)}/>
                   </td>
                   <td >
-                      <input type="button" value="完了" />
+                      <input type="button" value="完了" onClick={() => this.hideOrShowDialogCon(true)}/>
                       <input type="button" value="キャンセル" onClick={this.hide} />
                   </td>
                 </tr>
               </tbody>
             </table>
+            <DeleteCom isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialogDel} />
+            <ConfirmCom isActive={this.state.isConfimActive} hideDialog={this.hideOrShowDialogCon} />
         </Dialog>
     );
   }

@@ -5,7 +5,7 @@ import theme from '../../css/dialog.css';
 import DeleteCom from './DeleteCom';
 import ConfirmCom from './ConfirmCom';
 
-class CityAccountEditor extends Component {
+class CityAccountEditorNew extends Component {
   constructor(props){
     super(props);
     this.state={
@@ -25,22 +25,22 @@ class CityAccountEditor extends Component {
     this.props.hideDialog();
   }
   render(){
-  		const{CityInfo}=this.props;
+  		
     	return (
 	        <Dialog theme={theme} active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
 	            <table className={HospitalCss.htable} align="center">
 	              <tbody>
 	                <tr>
 	                    <td>■ 自治体ID</td>
-	                    <td>{CityInfo.cityId}</td>    
+	                    <td></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体コード</td>
-	                    <td><input type="text" value={CityInfo.cityCode} readOnly="read-only" /></td> 
+	                    <td><input type="text"  /></td> 
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体名</td>
-	                    <td><input type="text" value={CityInfo.cityName} readOnly="read-only"/></td>    
+	                    <td><input type="text" /></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ アカウント名</td>
@@ -52,7 +52,7 @@ class CityAccountEditor extends Component {
 	                </tr>
 	                <tr>
 	                    <td>■ パスワード</td>
-	                    <td><input type="text"	/></td>    
+	                    <td><input type="text"/></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ 権限</td>
@@ -65,7 +65,7 @@ class CityAccountEditor extends Component {
 	                <tr></tr>
 	                <tr>
 	                    <td>
-	                        <input type="button" value="削除" onClick={() => this.hideOrShowDialogDel(true)}/>
+	                        
 	                    </td>
 	                    <td >
 	                        <input type="button" value="完了" onClick={() => this.hideOrShowDialogCon(true)}/>
@@ -81,4 +81,4 @@ class CityAccountEditor extends Component {
   }
 }
 
-export default CityAccountEditor;
+export default CityAccountEditorNew;
