@@ -9,22 +9,34 @@ class HospitalAccountManagement extends Component {
 			isDialogActive:false,
 			hospitalAccounts:[],
 			selectedAccount:{orgName:'',orgId:'',orgCode:'',managerId:'',cityCode:''},
+			searchCondition:'',
+			isEdit:false
 		}
 	}
 
-	hideOrShowDialog = (isNew) => {
-		if(isNew){
-			this.setState({selectedAccount:{orgName:'',orgId:'',orgCode:'',managerId:'',cityCode:''}})
-		}
-		
+	hideOrShowDialog = () => {
 	   this.setState({isDialogActive:!this.state.isDialogActive})
 	}
+
 	handleEdit =(item) =>{
 		this.setState({
-			selectedAccount:item
-		})
-		this.hideOrShowDialog(false)
+			selectedAccount:item,
+			isEdit:true
+		});
+		this.hideOrShowDialog();
 	}
+	
+	handleCreate = () => {
+		this.setState({
+			selectedAccount:{orgName:'',orgId:'',orgCode:'',managerId:'',cityCode:''},
+			isEdit:false
+		});
+		this.hideOrShowDialog();	
+	}
+
+	changeCode = () =>{
+        this.setState({searchCondition:this.refs.SearchCode.value});
+    }
 
 	componentDidMount = () => {
 		const hospitalAccounts = [
@@ -48,10 +60,9 @@ class HospitalAccountManagement extends Component {
 	    	<div className={Manager.accountSearch}>
 				<div className={Manager.searchArea}>
 					<span className={Manager.span}>病院アカウント検索</span>
-					
+					<input type="text" className={Manager.text} ref="SearchCode" value={this.state.searchCondition} onChange={() =>this.changeCode()}/>
 					<button className={Manager.search} >検索 </button>
-
-					<button className={Manager.new} onClick={() => this.hideOrShowDialog(true)}>新規</button>
+					<button className={Manager.new} onClick={() => this.handleCreate()}>新規</button>
 				</div>
 				
 				<div className={Manager.listArea}>
@@ -84,7 +95,8 @@ class HospitalAccountManagement extends Component {
 						</tbody>
 					</table>
 				</div>
-				< HospitalAccountEditorTable isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog} accountInfo={this.state.selectedAccount} />
+				 < HospitalAccountEditorTable isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog} accountInfo={this.state.selectedAccount} isEditMode={this.state.isEdit}/>
+
 	    	</div>
 	    );
   	}

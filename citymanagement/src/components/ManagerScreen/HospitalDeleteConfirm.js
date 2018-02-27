@@ -4,32 +4,24 @@ import Dialog from 'react-toolbox/lib/dialog';
 
 
 class HospitalDeleteConfirm extends Component{
-    constructor(props){
-        super(props);
-        this.state={
-         
-        }
-     }
+  constructor(props){
+    super(props);
+  }
 
-   
-    hide = () => {
-        this.props.hideDialog();
-    }
-
-    render () {
-   return (
+  render () {
+    return (
        <Dialog theme={theme} active={this.props.isActive} >
-           <div className={theme.delMsg}>
-               このデータを削除ボタンします。<br/>
-                よろしいですか？
-            </div>
-            <div className={theme.buttonDiv}>
-                <button className={theme.buttonYes}>はい</button>
-                <button className={theme.buttonNo} onClick={() =>this.hide()}>いいえ</button>
-            </div>
+          <div className={theme.delMsg}>
+             このデータを削除ボタンします。<br/>
+              よろしいですか？
+          </div>
+          <div className={theme.buttonDiv}>
+            <button className={theme.buttonYes} onClick={() =>this.props.handleDeleteDialogYes()}>はい</button>
+            <button className={theme.buttonNo} onClick={() =>this.props.handleDeleteDialogNo()}>いいえ</button>
+          </div>
        </Dialog>
-   );
- }
+    );
+  }
 }
 
 export default HospitalDeleteConfirm;

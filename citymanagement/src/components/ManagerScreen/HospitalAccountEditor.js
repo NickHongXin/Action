@@ -2,36 +2,68 @@ import React, { Component } from 'react';
 import HospitalCss from '../../css/AccountEditor.css';
 import Dialog from 'react-toolbox/lib/dialog';
 import HospitalDeleteComfirm from './HospitalDeleteConfirm';
-import HospitalComfirm from './HospitalDeleteConfirm';
+import HospitalConfirm from './HospitalConfirm';
 import theme from '../../css/dialog.css';
 
 class HospitalAccountEditor extends Component {
   constructor(props){
     super(props);
     this.state={
-      isDialogActive:false,
+      isDialogDelActive:false,
+      isDialogConfActive:false,
       orgName:'',
       orgId:'',
       orgCode:'',
-      managerId:'',
-      cityCode:''
+      cityCode:'',
+      accountName:'',
+      loginId:'',
+      pwd:'',
+      permissions:[
+        {id:'1',name:'readyonly',isChecked:true},
+        {id:'2',name:'all',isChecked:true},
+      ]
     }
   }
 
-  hide = () => {
-    this.props.hideDialog();
-    
-  }
-  hideOrShowDialog = () =>{
-     this.setState({isDialogActive:!this.state.isDialogActive})
+  handleCancel = () => {
+    this.props.hideDialog();    
   }
 
-  componentWillReceiveProps = (nextProps) =>{
+  hideDelete = () => {
+    this.setState({isDialogDelActive:true});
+  }
+
+  hideDeleteDialogYes = () =>{
+    // todo delete from db  
+    this.handleCancel();
+    this.setState({isDialogDelActive:false});
+  }
+
+  hideDeleteDialogNo = () =>{
+    this.setState({isDialogDelActive:false});
+  }
+
+  handleSave = () => {
+    this.setState({isDialogConfActive:true});
+  }
+
+  handleSaveDialogYes = () =>{
+    // todo save to db  
+    this.handleCancel();
+    this.setState({isDialogConfActive:false});
+  }
+
+  handleSaveDialogNo = () =>{
+    // todo save to db  
+
+    this.setState({isDialogConfActive:false});
+  }
+
+  componentWillReceiveProps = (nextProps) => {
     this.setState({
       orgName:nextProps.accountInfo.orgName,
       orgId:nextProps.accountInfo.orgId,
       orgCode:nextProps.accountInfo.orgCode,
-      managerId:nextProps.accountInfo.managerId,
       cityCode:nextProps.accountInfo.cityCode
     })
   }
@@ -40,9 +72,22 @@ class HospitalAccountEditor extends Component {
     this.setState({[name]: event.target.value})
   }
 
+  handleCheckboxChange = (id) => {
+      this.state.permissions.map((item)=>{
+          if (item.id === id) {
+              item.isChecked= !item.isChecked
+          }
+      })
+    this.setState({permissions: this.state.permissions.slice(0)})
+  }
+
+  componentWillMount =() => {
+    console.log('HospitalAccountEditor hitted')
+  }
+
   render ()  {
     return (
-        <Dialog theme={theme} active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
+        <Dialog theme={theme} active={this.props.isActive}>
             <table className={HospitalCss.htable} align="center">
               <tbody>
                 <tr>
@@ -63,39 +108,57 @@ class HospitalAccountEditor extends Component {
                 </tr>
                 <tr>
                   <td>■ アカウント名</td>
-                  <td><input type="text"/></td>    
+                  <td><input type="text" value={this.state.accountName} onChange={this.handleChange.bind(this,'accountName')}/></td>    
                 </tr>
                 <tr>
                   <td>■ ログインID</td>
-                  <td><input type="text"/></td>    
+                  <td><input type="text" value={this.state.loginId} onChange={this.handleChange.bind(this,'loginId')}/></td>    
                 </tr>
                 <tr>
                   <td>■ パスワード</td>
-                  <td><input type="text"/></td>    
+                  <td><input type="text" value={this.state.pwd} onChange={this.handleChange.bind(this,'pwd')}/></td>    
                 </tr>
                 <tr>
                   <td>■ 権限</td>
                   <td>
-                      <input type="checkbox" value="1"/>1<br/>
-                      <input type="checkbox" value="2"/>2<br/>
-                      <input type="checkbox" value="3"/>3
-                  </td>    
+                      {
+                          this.state.permissions.map((item,idx) => {
+                              return (
+                              <div key={idx}>
+                                  <input type='checkbox' 
+                                      checked={item.isChecked}
+                                      onChange={this.handleCheckboxChange.bind(this, item.id)}/>
+                                  {item.name}<br />
+                             </div>)
+                          })
+                      }
+                    
+                  </td>     
                 </tr>
                 <tr></tr>
                 <tr>
                   <td>
-                  
-                     <input type="button" value="削除" id="deleteId" onClick={() => this.hideOrShowDialog()}/> 
+                     {
+                      this.props.isEditMode 
+                        ? <input type="button" value="削除" id="deleteId" onClick={() => this.hideDelete()}/> 
+                        : ''
+                      }
                   </td>
                   <td >
-                      <input type="button" value="完了" onClick={() => this.hideOrShowDialog(true)} />
-                      <input type="button" value="キャンセル" onClick={this.hide} />
+                      <input type="button" value="完了" onClick={() => this.handleSave()} />
+                      <input type="button" value="キャンセル" onClick={() => this.handleCancel()} />
                   </td>
                 </tr>
               </tbody>
             </table>  
-            <HospitalDeleteComfirm  isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog} />
-        
+            <HospitalDeleteComfirm  
+              isActive={this.state.isDialogDelActive} 
+              handleDeleteDialogYes={this.hideDeleteDialogYes}
+              handleDeleteDialogNo={this.hideDeleteDialogNo} />
+            <HospitalConfirm 
+              isActive={this.state.isDialogConfActive}
+              handleConfirmDialogYes={this.handleSaveDialogYes} 
+              handleConfirmDialogNo={this.handleSaveDialogNo} />
         </Dialog>
     );
   }
