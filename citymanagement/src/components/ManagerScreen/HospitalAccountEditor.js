@@ -4,6 +4,8 @@ import Dialog from 'react-toolbox/lib/dialog';
 import HospitalDeleteComfirm from './HospitalDeleteConfirm';
 import HospitalConfirm from './HospitalConfirm';
 import theme from '../../css/dialog.css';
+import DeleteCom from './DeleteCom';
+import ConfirmCom from './ConfirmCom';
 
 class HospitalAccountEditor extends Component {
   constructor(props){
@@ -81,10 +83,6 @@ class HospitalAccountEditor extends Component {
     this.setState({permissions: this.state.permissions.slice(0)})
   }
 
-  componentWillMount =() => {
-    console.log('HospitalAccountEditor hitted')
-  }
-
   render ()  {
     return (
         <Dialog theme={theme} active={this.props.isActive}>
@@ -135,7 +133,6 @@ class HospitalAccountEditor extends Component {
                     
                   </td>     
                 </tr>
-                <tr></tr>
                 <tr>
                   <td>
                      {
