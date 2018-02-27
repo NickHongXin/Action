@@ -18,7 +18,9 @@ class DeleteCom extends Component{
 	hide = () => {
 		this.props.hideDialog();
 	}
-
+	hideConfim = () => {
+		this.props.hideDialog();
+	}
 	render () {
     return (
         <Dialog theme={theme} active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
@@ -27,7 +29,7 @@ class DeleteCom extends Component{
 				よろしいですか？
 			</div>
 			<div className={theme.buttonDiv}>
-				<button className={theme.buttonYes}>はい</button>
+				<button className={theme.buttonYes} onClick={this.hideConfim}>はい</button>
 				<button className={theme.buttonNo} onClick={this.hide}>いいえ</button>
 			</div>
         </Dialog>

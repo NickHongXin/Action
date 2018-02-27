@@ -6,66 +6,122 @@ import DeleteCom from './DeleteCom';
 import ConfirmCom from './ConfirmCom';
 
 class CityAccountEditor extends Component {
-  constructor(props){
-    super(props);
-    this.state={
-      isDialogActive:false,
-      isConfimActive:false
-    }
-  }
+	constructor(props){
+	   	super(props);
+	    this.state={
+		    isDialogActive:false,
+		    isConfimActive:false,
+		    cityName:'',
+		    cityId:'',
+		    cityCode:'',
+		    managerId:'',
+		    accountName:'',
+		    passWord:'',
+		    permissions:[
+		    	{id:'1',name:'readyonly',isChecked:true},
+		    	{id:'2',name:'all',isChecked:true},
+		    ],
+	    }
+	}
 
-  hideOrShowDialogDel = () => {
-     this.setState({isDialogActive:!this.state.isDialogActive})
-  }
-  hideOrShowDialogCon = () => {
-     this.setState({isConfimActive:!this.state.isConfimActive})
-  }
+	componentWillReceiveProps = (nextProps) =>{
+		this.setState({
+			cityName:nextProps.CityInfo.cityName,
+			cityId:nextProps.CityInfo.cityId,
+			cityCode:nextProps.CityInfo.cityCode,
+			managerId:nextProps.CityInfo.managerId,
+		})
+	}
+	handleChangeText = () =>{
+		this.setState({
+			accountName:this.refs.accountNameText.value,
+			passWord:this.refs.passWordText.value,
+		})
+	}
 
-  hide = () => {
-    this.props.hideDialog();
-  }
-  render(){
-  		const{CityInfo}=this.props;
+	handleChange = (name, event) => {
+		this.setState({[name]: event.target.value})
+	}
+
+	handleCheckbox = (id) => {
+		this.state.permissions.map((item)=>{
+			if (item.id === id) {
+				item.isChecked= !item.isChecked
+			}
+		})
+	  	this.setState({permissions: this.state.permissions.slice(0)})
+	}
+
+	hideOrShowDialogDel = () => {
+	    this.setState({isDialogActive:!this.state.isDialogActive})
+	}
+	hideOrShowDialogCon = () => {
+	    this.setState({isConfimActive:!this.state.isConfimActive})
+	}
+
+	hide = () => {
+	   this.props.hideDialog();
+	}
+  	render(){ 		
     	return (
 	        <Dialog theme={theme} active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
 	            <table className={HospitalCss.htable} align="center">
 	              <tbody>
 	                <tr>
 	                    <td>■ 自治体ID</td>
-	                    <td>{CityInfo.cityId}</td>    
+	                    <td>
+	                    	
+	                    	{
+	                    	this.props.isEditMode
+							 ? this.state.cityId
+	                    	 : 1111111
+	                    	}     
+	                    </td>    
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体コード</td>
-	                    <td><input type="text" value={CityInfo.cityCode} readOnly="read-only" /></td> 
+	                    <td><input type="text" value={this.state.cityCode} onChange={this.handleChange.bind(this, 'cityCode')} /></td> 
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体名</td>
-	                    <td><input type="text" value={CityInfo.cityName} readOnly="read-only"/></td>    
+	                    <td><input type="text" value={this.state.cityName} onChange={this.handleChange.bind(this, 'cityName')} /></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ アカウント名</td>
-	                    <td><input type="text"/></td>    
+	                    <td><input type="text" ref="accountNameText" value={this.state.accountName} onChange={this.handleChangeText} /></td>
 	                </tr>
 	                <tr>
 	                    <td>■ ログインID</td>
-	                    <td><input type="text"/></td>    
+	                    <td><input type="text" value={this.state.managerId} onChange={this.handleChange.bind(this, 'managerId')} /></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ パスワード</td>
-	                    <td><input type="text"	/></td>    
+	                    <td><input type="text"	ref="passWordText" value={this.state.passWord}  onChange={this.handleChangeText}/></td>
 	                </tr>
 	                <tr>
 	                    <td>■ 権限</td>
 	                    <td>
-	                        <input type="checkbox" value="1"/>1<br/>
-	                        <input type="checkbox" value="2"/>2<br/>
-	                        <input type="checkbox" value="3"/>3
+	                    	{
+	                    		this.state.permissions.map((item,idx) => {
+	                    			return (
+	                    			<div key={idx}>
+	                    				<input type='checkbox' 
+	                    					checked={item.isChecked}
+	                    					onChange={this.handleCheckbox.bind(this, item.id)}/>
+	                    				{item.name}<br/>
+                    				</div>)
+	                    		})
+	                    	}
 	                    </td>    
 	                </tr>
 	                <tr></tr>
 	                <tr>
 	                    <td>
-	                        <input type="button" value="削除" onClick={() => this.hideOrShowDialogDel(true)}/>
+	                    	{
+	                    	this.props.isEditMode
+							 ? <input type="button" value="削除" onClick={() => this.hideOrShowDialogDel(true)}/>
+	                    	 : ''
+	                    	}
 	                    </td>
 	                    <td >
 	                        <input type="button" value="完了" onClick={() => this.hideOrShowDialogCon(true)}/>

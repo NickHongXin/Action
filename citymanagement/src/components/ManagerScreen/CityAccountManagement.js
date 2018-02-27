@@ -1,32 +1,36 @@
 import React,{ Component } from 'react';
 import Manager from '../../css/Manager.css';
 import CityAccountEditor from './CityAccountEditor';
-import CityAccountEditorNew from './CityAccountEditorNew';
 
 class CityAccountManagement extends Component {
 	constructor(props){
 		super(props);
 		this.state={
 			isDialogActive:false,
-			isNewDialogActive:false,
 			cityAccounts:[],
-			selectCityAccounts:{},
+			selectCityAccounts:{cityName:'',cityId:'',cityCode:'',managerId:''},
 			searchCondition:'',
+			isEdit:false
 		}
 	}
-	changeCode = () =>{
+	changeSearchCode = () =>{
 		this.setState({searchCondition:this.refs.SearchCode.value})
 	}
 
     hideOrShowDialog = () => {
 	    this.setState({isDialogActive:!this.state.isDialogActive})
   	}
-  	hideOrShowDialogNew = () => {
-	    this.setState({isNewDialogActive:!this.state.isNewDialogActive})
-  	}
   	hideEdit = (item) => {
-  		 this.setState({
+  		this.setState({
             selectCityAccounts:item,
+            isEdit:true
+        });
+  		this.hideOrShowDialog();
+  	}
+  	hideCreate = () =>{
+		this.setState({
+            selectCityAccounts:{},
+            isEdit:false
         });
   		this.hideOrShowDialog();
   	}
@@ -43,7 +47,6 @@ class CityAccountManagement extends Component {
 			{cityName:'I市',cityId:'9',cityCode:'901',managerId:'09'},
 			{cityName:'J市',cityId:'10',cityCode:'012',managerId:'010'}
 		];
-
 		this.setState({cityAccounts: cityAccounts});
 	}
 
@@ -52,9 +55,9 @@ class CityAccountManagement extends Component {
 	    	<div className={Manager.accountSearch}>
 				<div className={Manager.searchArea}>
 					<span className={Manager.span}>自治体アカウント検索</span>
-					<input type="text" className={Manager.text} ref="SearchCode" value={this.state.searchCondition} onChange={this.changeCode}/>
+					<input type="text" className={Manager.text} ref="SearchCode" value={this.state.searchCondition} onChange={this.changeSearchCode}/>
 					<button className={Manager.search} >検索 </button>
-					<button className={Manager.new} onClick={() => this.hideOrShowDialogNew(true)}>新規</button>
+					<button className={Manager.new} onClick={this.hideCreate}>新規</button>
 				</div>
 				<div className={Manager.listArea}>
 					<table className={Manager.intable}>
@@ -84,8 +87,7 @@ class CityAccountManagement extends Component {
 						</tbody>
 					</table>
 				</div>
-				<CityAccountEditorNew isActive={this.state.isNewDialogActive} hideDialog={this.hideOrShowDialogNew}  />
-				<CityAccountEditor isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog}  CityInfo={this.state.selectCityAccounts}/>
+				<CityAccountEditor isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog}  CityInfo={this.state.selectCityAccounts} isEditMode={this.state.isEdit}/>
 			</div>
 	    );
     }

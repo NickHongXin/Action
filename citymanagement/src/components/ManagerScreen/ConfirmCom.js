@@ -18,6 +18,9 @@ class ConfirmCom extends Component{
 	hide = () => {
 		this.props.hideDialog();
 	}
+	hideConfim = () => {
+		this.props.hideDialog();
+	}
 
 	render () {
     return (
@@ -27,7 +30,7 @@ class ConfirmCom extends Component{
 				よろしいですか？
 			</div>
 			<div className={theme.buttonDiv}>
-				<button className={theme.buttonYes}>はい</button>
+				<button className={theme.buttonYes} onClick={this.hideConfim}>はい</button>
 				<button className={theme.buttonNo} onClick={this.hide}>いいえ</button>
 			</div>
         </Dialog>
