@@ -1,6 +1,7 @@
 .paging {
 	padding-bottom: 15px;
 	font-size: 12px;
+	margin-left: -41px;
 }
 
 .link {
@@ -14,13 +15,13 @@
 .link span {
 	color: #dadada;
 	font-weight: bold;
-	font-size: 14px;
+	font-size: 18px;
 }
 
 .link span a {
 	color: #4472C4;
 	font-weight: bold;
-	font-size: 14px;
+	font-size: 18px;
 	text-decoration: none;
 }
 
@@ -46,6 +47,7 @@
 	border-right: 1px solid #dfdfdf;
 	padding: 0 8px;
 	line-height: 1;
+	font-size: 18px;
 }
 
 .textlink li:last-child {
@@ -53,7 +55,7 @@
 }
 
 .textlink li a {
-	font-size: 14px;
+	font-size: 18px;
 	text-decoration: none;
 	color: #4472C4;
 }

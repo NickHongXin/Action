@@ -88,12 +88,12 @@
 
 .hospital{
 	display: inline;
-	width:35%;
+	width:30%;
 	height:85%;
 	border-radius:15px;
 	border-style:solid;
 	border-color:#000000;
-	font-size:2vw;
+	font-size:1.5vw;
 	font-weight:100;
 	border-width: 2px;
 	background-color:#ffffff;
@@ -204,59 +204,6 @@
 	text-align:right;
 }
 
-
-.paging {
-	padding-bottom: 15px;
-}
-
-.link {
-	display: table;
-	float: left;
-	line-height: 1;
-	margin-right: 5px;
-}
-
-.link span {
-	color: #dadada;
-	font-weight: bold;
-	font-size: 14px;
-}
-
-.link span a {
-	color: #0aa985;
-	font-weight: bold;
-	font-size: 14px;
-	text-decoration: none;
-}
-
-.link_left {
-	display: table-cell;
-	padding-right: 8px;
-}
-
-.link_right {
-	display: table-cell;
-	padding-left: 8px;
-}
-
-.textlink {
-	display: table;
-}
-
-.textlink li {
-	display: table-cell;
-	color: #dadada;
-	border-right: 1px solid #dfdfdf;
-	padding: 0 8px;
-	line-height: 1;
-}
-
-.textlink li:last-child {
-	border: none;
-}
-
-.textlink li a {
-	font-size: 14px;
-	text-decoration: none;
-	color: #0aa985;
+.pageMargin{
+	margin-left: 5%;
 }

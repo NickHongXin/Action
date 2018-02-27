@@ -27,7 +27,26 @@ class HospitalAccountManagement extends Component {
 			{orgName:'病院7',orgId:'7',orgCode:'789',managerId:'07',cityCode:'789'},
 			{orgName:'病院8',orgId:'8',orgCode:'890',managerId:'08',cityCode:'890'},
 			{orgName:'病院9',orgId:'9',orgCode:'901',managerId:'09',cityCode:'901'},
-			{orgName:'病院10',orgId:'10',orgCode:'012',managerId:'010',cityCode:'012'}
+			{orgName:'病院10',orgId:'10',orgCode:'012',managerId:'010',cityCode:'012'},
+			{orgName:'病院11',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院12',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院13',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院14',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院15',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院16',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院17',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院18',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院19',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院20',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
+			{orgName:'病院21',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
+			{orgName:'病院22',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
+			{orgName:'病院23',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
+			{orgName:'病院24',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
+			{orgName:'病院25',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
+			{orgName:'病院26',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
+			{orgName:'病院27',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
+			{orgName:'病院28',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
+			{orgName:'病院29',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'}
 		];
 
 		this.setState({hospitalAccounts: hospitalAccounts});
@@ -42,7 +61,7 @@ class HospitalAccountManagement extends Component {
 					<button className={Manager.search} >検索 </button>
 					<button className={Manager.new} onClick={() => this.hideOrShowDialog(true)}>新規</button>
 				</div>
-				< Pages />
+				< Pages className={Manager.pageMargin}/>
 				<div className={Manager.listArea}>
 					<table className={Manager.intable}>
 						<thead>
@@ -62,7 +81,7 @@ class HospitalAccountManagement extends Component {
 									<tr key={idx}>
 										<td>{idx + 1}</td>
 										<td>{item.orgName}</td>
-										<td>{item.orgId}</td>
+										<td>{idx + 1}</td>
 										<td>{item.orgCode}</td>
 										<td>{item.managerId}</td>
 										<td>{item.cityCode}</td>

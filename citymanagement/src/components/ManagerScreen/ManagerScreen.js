@@ -53,7 +53,7 @@ class ManagerScreen extends Component{
 	        	<div className={Manager.title_header}>
 		            <div className={Manager.l_f}><span>予防接種管理システム</span></div>
 		            <div className={Manager.r_f}>
-		              <button type="button" className={Manager.btn_setup} >设定</button>
+		              <button type="button" className={Manager.btn_setup} >設定</button>
 		              <button type="button" className={Manager.btn_logout} onClick={this.logout}>ログアウト</button>
 		              <span className={Manager.loginUser}>{ this.state.username }</span>
 		            </div>
