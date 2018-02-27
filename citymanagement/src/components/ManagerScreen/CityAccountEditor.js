@@ -80,23 +80,23 @@ class CityAccountEditor extends Component {
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体コード</td>
-	                    <td><input type="text" value={this.state.cityCode} onChange={this.handleChange.bind(this, 'cityCode')} /></td> 
+	                    <td><input type="text" className={HospitalCss.text} value={this.state.cityCode} onChange={this.handleChange.bind(this, 'cityCode')} /></td> 
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体名</td>
-	                    <td><input type="text" value={this.state.cityName} onChange={this.handleChange.bind(this, 'cityName')} /></td>    
+	                    <td><input type="text" className={HospitalCss.text} value={this.state.cityName} onChange={this.handleChange.bind(this, 'cityName')} /></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ アカウント名</td>
-	                    <td><input type="text" ref="accountNameText" value={this.state.accountName} onChange={this.handleChangeText} /></td>
+	                    <td><input type="text" className={HospitalCss.text} ref="accountNameText" value={this.state.accountName} onChange={this.handleChangeText} /></td>
 	                </tr>
 	                <tr>
 	                    <td>■ ログインID</td>
-	                    <td><input type="text" value={this.state.managerId} onChange={this.handleChange.bind(this, 'managerId')} /></td>    
+	                    <td><input type="text" className={HospitalCss.text} value={this.state.managerId} onChange={this.handleChange.bind(this, 'managerId')} /></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ パスワード</td>
-	                    <td><input type="text"	ref="passWordText" value={this.state.passWord}  onChange={this.handleChangeText}/></td>
+	                    <td><input type="text" className={HospitalCss.text} ref="passWordText" value={this.state.passWord}  onChange={this.handleChangeText}/></td>
 	                </tr>
 	                <tr>
 	                    <td>■ 権限</td>
