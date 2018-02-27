@@ -19,9 +19,9 @@ class Paging extends Component{
 		                <li className={ Page.link_right }><span><a href=''>＞</a></span></li>
 		              </ul>
 		              <ul className={ Page.textlink }>
-		                <li>1</li>
-		                <li><a href=''>2</a></li>
-		                <li>3</li>
+		                <li><a href=''>1</a></li>
+		                <li>2</li>
+		                <li><a href=''>3</a></li>
 		              </ul>
 		            </div>
 	         	</div>
