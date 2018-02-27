@@ -1,5 +1,6 @@
 import React,{ Component } from 'react';
 import Manager from '../../css/Manager.css';
+import Pages from '../medical_engine/Page';
 import CityAccountEditor from './CityAccountEditor';
 
 class CityAccountManagement extends Component {
@@ -41,6 +42,7 @@ class CityAccountManagement extends Component {
 					<button className={Manager.search} >検索 </button>
 					<button className={Manager.new} onClick={() => this.hideOrShowDialog(true)}>新規</button>
 				</div>
+				< Pages />
 				<div className={Manager.listArea}>
 					<table className={Manager.intable}>
 						<thead>

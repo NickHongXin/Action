@@ -20,27 +20,27 @@ class HospitalAccountEditor extends Component {
                 </tr>
                 <tr>
                   <td>■ 医療機関コード</td>
-                  <td><input type="text"/></td> 
+                  <td><input type="text" className={HospitalCss.text}/></td> 
                 </tr>
                 <tr>
                   <td>■ 医療機関名</td>
-                  <td><input type="text"/></td>    
+                  <td><input type="text" className={HospitalCss.text}/></td>    
                 </tr>
                 <tr>
                   <td>■ 管轄自治体コード</td>
-                  <td><input type="text"/></td>    
+                  <td><input type="text" className={HospitalCss.text}/></td>    
                 </tr>
                 <tr>
                   <td>■ アカウント名</td>
-                  <td><input type="text"/></td>    
+                  <td><input type="text" className={HospitalCss.text}/></td>    
                 </tr>
                 <tr>
                   <td>■ ログインID</td>
-                  <td><input type="text"/></td>    
+                  <td><input type="text" className={HospitalCss.text}/></td>    
                 </tr>
                 <tr>
                   <td>■ パスワード</td>
-                  <td><input type="text"/></td>    
+                  <td><input type="text" className={HospitalCss.text}/></td>    
                 </tr>
                 <tr>
                   <td>■ 権限</td>
