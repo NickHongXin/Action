@@ -96,27 +96,27 @@ class HospitalAccountEditor extends Component {
                 </tr>
                 <tr>
                   <td>■ 医療機関コード</td>
-                  <td><input type="text" value={this.state.orgCode} onChange={this.handleChange.bind(this, 'orgCode')} /></td> 
+                  <td><input type="text" className={HospitalCss.text} value={this.state.orgCode} onChange={this.handleChange.bind(this, 'orgCode')} /></td> 
                 </tr>
                 <tr>
                   <td>■ 医療機関名</td>
-                  <td><input type="text" value={this.state.orgName} onChange={this.handleChange.bind(this, 'orgName')} /></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.orgName} onChange={this.handleChange.bind(this, 'orgName')} /></td>    
                 </tr>
                 <tr>
                   <td>■ 管轄自治体コード</td>
-                  <td><input type="text" value={this.state.cityCode} onChange={this.handleChange.bind(this, 'cityCode')} /></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.cityCode} onChange={this.handleChange.bind(this, 'cityCode')} /></td>    
                 </tr>
                 <tr>
                   <td>■ アカウント名</td>
-                  <td><input type="text" value={this.state.accountName} onChange={this.handleChange.bind(this,'accountName')}/></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.accountName} onChange={this.handleChange.bind(this,'accountName')}/></td>    
                 </tr>
                 <tr>
                   <td>■ ログインID</td>
-                  <td><input type="text" value={this.state.loginId} onChange={this.handleChange.bind(this,'loginId')}/></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.loginId} onChange={this.handleChange.bind(this,'loginId')}/></td>    
                 </tr>
                 <tr>
                   <td>■ パスワード</td>
-                  <td><input type="text" value={this.state.pwd} onChange={this.handleChange.bind(this,'pwd')}/></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.pwd} onChange={this.handleChange.bind(this,'pwd')}/></td>
                 </tr>
                 <tr>
                   <td>■ 権限</td>
