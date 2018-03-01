@@ -104,7 +104,7 @@ class HospitalAccountManagement extends Component {
 									<tr key={idx}>
 										<td>{idx + 1}</td>
 										<td>{item.orgName}</td>
-										<td>{idx + 1}</td>
+										<td>{item.orgId}</td>
 										<td>{item.orgCode}</td>
 										<td>{item.managerId}</td>
 										<td>{item.cityCode}</td>
