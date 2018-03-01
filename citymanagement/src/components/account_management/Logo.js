@@ -1,5 +1,5 @@
 import React from 'react';
-import theme from '../../css/Logo.css';
+import theme from '../../css/logo.css';
 
 const Logo = (props) => (
   <div className={ theme.logo }>

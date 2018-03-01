@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import Logo from './components/medical_engine/Logo';
+import Logo from './components/account_management/Logo';
 import { Button } from 'react-toolbox/lib/button';
-
-import theme from './css/Login.css';
+import theme from './css/login.css';
 
 class Login extends Component {
   constructor(props) {

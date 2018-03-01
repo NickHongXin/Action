@@ -1,18 +1,16 @@
 import React, { Component } from 'react';
-import HospitalCss from '../../css/AccountEditor.css';
+import HospitalCss from '../../css/accountEditor.css';
 import Dialog from 'react-toolbox/lib/dialog';
-import HospitalDeleteComfirm from './HospitalDeleteConfirm';
-import HospitalConfirm from './HospitalConfirm';
+import DeleteConfirmation from './DeleteConfirmation';
+import SaveConfirmation from './SaveConfirmation';
 import theme from '../../css/dialog.css';
-import DeleteCom from './DeleteCom';
-import ConfirmCom from './ConfirmCom';
 
 class HospitalAccountEditor extends Component {
   constructor(props){
     super(props);
     this.state={
-      isDialogDelActive:false,
-      isDialogConfActive:false,
+      isDeleteDialogActive:false,
+      isSaveDialogActive:false,
       orgName:'',
       orgId:'',
       orgCode:'',
@@ -25,40 +23,6 @@ class HospitalAccountEditor extends Component {
         {id:'2',name:'all',isChecked:true},
       ]
     }
-  }
-
-  handleCancel = () => {
-    this.props.hideDialog();    
-  }
-
-  hideDelete = () => {
-    this.setState({isDialogDelActive:true});
-  }
-
-  hideDeleteDialogYes = () =>{
-    // todo delete from db  
-    this.handleCancel();
-    this.setState({isDialogDelActive:false});
-  }
-
-  hideDeleteDialogNo = () =>{
-    this.setState({isDialogDelActive:false});
-  }
-
-  handleSave = () => {
-    this.setState({isDialogConfActive:true});
-  }
-
-  handleSaveDialogYes = () =>{
-    // todo save to db  
-    this.handleCancel();
-    this.setState({isDialogConfActive:false});
-  }
-
-  handleSaveDialogNo = () =>{
-    // todo save to db  
-
-    this.setState({isDialogConfActive:false});
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -81,6 +45,26 @@ class HospitalAccountEditor extends Component {
           }
       })
     this.setState({permissions: this.state.permissions.slice(0)})
+  }
+
+  handleDeleteConfirmation = (isActive) => {
+    this.setState({isDeleteDialogActive:isActive});
+  }
+
+  handleDeleteConfirmationYes = () =>{
+    // todo delete from db  
+    this.handleDeleteConfirmation(false);
+    this.props.hideDialog(); 
+  }
+
+  handleSaveConfirmation = (isActive) => {
+    this.setState({isSaveDialogActive:isActive});
+  }
+
+  handleSaveConfirmationYes = () =>{
+    // todo save to db  
+    this.handleSaveConfirmation(false);
+    this.props.hideDialog(); 
   }
 
   render ()  {
@@ -137,25 +121,25 @@ class HospitalAccountEditor extends Component {
                   <td>
                      {
                       this.props.isEditMode 
-                        ? <input type="button" value="削除" id="deleteId" onClick={() => this.hideDelete()}/> 
+                        ? <input type="button" value="削除" id="deleteId" onClick={this.handleDeleteConfirmation.bind(this, true)}/> 
                         : ''
                       }
                   </td>
                   <td >
-                      <input type="button" value="完了" onClick={() => this.handleSave()} />
-                      <input type="button" value="キャンセル" onClick={() => this.handleCancel()} />
+                      <input type="button" value="完了" onClick={this.handleSaveConfirmation.bind(this, true)} />
+                      <input type="button" value="キャンセル" onClick={this.props.hideDialog} />
                   </td>
                 </tr>
               </tbody>
             </table>  
-            <HospitalDeleteComfirm  
-              isActive={this.state.isDialogDelActive} 
-              handleDeleteDialogYes={this.hideDeleteDialogYes}
-              handleDeleteDialogNo={this.hideDeleteDialogNo} />
-            <HospitalConfirm 
-              isActive={this.state.isDialogConfActive}
-              handleConfirmDialogYes={this.handleSaveDialogYes} 
-              handleConfirmDialogNo={this.handleSaveDialogNo} />
+            <DeleteConfirmation  
+              isActive={this.state.isDeleteDialogActive} 
+              handleDialogYes={this.handleDeleteConfirmationYes}
+              handleDialogNo={this.handleDeleteConfirmation.bind(this, false)} />
+            <SaveConfirmation 
+              isActive={this.state.isSaveDialogActive}
+              handleDialogYes={this.handleSaveConfirmationYes} 
+              handleDialogNo={this.handleSaveConfirmation.bind(this, false)} />
         </Dialog>
     );
   }

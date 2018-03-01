@@ -1,6 +1,6 @@
 import React,{ Component } from 'react';
-import Manager from '../../css/Manager.css';
-import Pages from '../medical_engine/Page';
+import Manager from '../../css/main.css';
+import Pages from './Page';
 import HospitalAccountEditorTable from './HospitalAccountEditor';
 
 class HospitalAccountManagement extends Component {

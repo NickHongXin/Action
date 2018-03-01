@@ -1,13 +1,9 @@
 import React,{ Component } from 'react';
-import Page from '../../css/Page.css';
+import Page from '../../css/page.css';
 
 class Paging extends Component{
 	constructor(props){
 		super(props);
-		this.state={
-			
-			
-		}
 	}
 
 	render() {

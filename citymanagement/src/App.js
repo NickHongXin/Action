@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import ManagerScreen from './components/ManagerScreen/ManagerScreen';
+import Main from './components/account_management/Main';
 class App extends Component {
   render() {
     return(
-  		<ManagerScreen/>
+  		<Main/>
     );
   }
 }

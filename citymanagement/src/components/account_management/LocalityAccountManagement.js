@@ -1,9 +1,9 @@
 import React,{ Component } from 'react';
-import Manager from '../../css/Manager.css';
-import Pages from '../medical_engine/Page';
-import CityAccountEditor from './CityAccountEditor';
+import Manager from '../../css/main.css';
+import Pages from './Page';
+import LocalityAccountEditor from './LocalityAccountEditor';
 
-class CityAccountManagement extends Component {
+class LocalityAccountManagement extends Component {
 	constructor(props){
 		super(props);
 		this.state={
@@ -89,10 +89,10 @@ class CityAccountManagement extends Component {
 						</tbody>
 					</table>
 				</div>
-				<CityAccountEditor isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog}  CityInfo={this.state.selectCityAccounts} isEditMode={this.state.isEdit}/>
+				<LocalityAccountEditor isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog}  CityInfo={this.state.selectCityAccounts} isEditMode={this.state.isEdit}/>
 			</div>
 	    );
     }
 }
 
-export default CityAccountManagement;
+export default LocalityAccountManagement;

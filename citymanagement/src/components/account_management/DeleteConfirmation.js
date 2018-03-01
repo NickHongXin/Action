@@ -3,7 +3,7 @@ import theme from '../../css/dialogDel.css';
 import Dialog from 'react-toolbox/lib/dialog';
 
 
-class HospitalDeleteConfirm extends Component{
+class DeleteConfirmation extends Component{
   constructor(props){
     super(props);
   }
@@ -16,12 +16,12 @@ class HospitalDeleteConfirm extends Component{
               よろしいですか？
           </div>
           <div className={theme.buttonDiv}>
-            <button className={theme.buttonYes} onClick={() =>this.props.handleDeleteDialogYes()}>はい</button>
-            <button className={theme.buttonNo} onClick={() =>this.props.handleDeleteDialogNo()}>いいえ</button>
+            <button className={theme.buttonYes} onClick={this.props.handleDialogYes}>はい</button>
+            <button className={theme.buttonNo} onClick={this.props.handleDialogNo}>いいえ</button>
           </div>
        </Dialog>
     );
   }
 }
 
-export default HospitalDeleteConfirm;
+export default DeleteConfirmation;

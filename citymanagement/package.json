@@ -1,9 +1,17 @@
 {
   "dependencies": {
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-toolbox": "^2.0.0-beta.12"
+  },
+  "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
     "css-loader": "^0.28.8",
     "postcss": "^6.0.16",
     "postcss-cssnext": "^3.0.2",
@@ -11,9 +19,6 @@
     "postcss-import": "^11.0.0",
     "postcss-loader": "^2.0.10",
     "postcss-mixins": "^6.2.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-toolbox": "^2.0.0-beta.12",
     "style-loader": "^0.19.1",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.10.1"
@@ -22,10 +27,5 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
     "start": "webpack-dev-server --hot --inline"
-  },
-  "devDependencies": {
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "react-router-dom": "^4.2.2"
   }
 }

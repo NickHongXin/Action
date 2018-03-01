@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import HospitalCss from '../../css/AccountEditor.css';
+import HospitalCss from '../../css/accountEditor.css';
 import Dialog from 'react-toolbox/lib/dialog';
 import theme from '../../css/dialog.css';
-import DeleteCom from './DeleteCom';
-import ConfirmCom from './ConfirmCom';
+import DeleteConfirmation from './DeleteConfirmation';
+import SaveConfirmation from './SaveConfirmation';
 
-class CityAccountEditor extends Component {
+class LocalityAccountEditor extends Component {
 	constructor(props){
 	   	super(props);
 	    this.state={
-		    isDialogActive:false,
-		    isConfimActive:false,
+      		isDeleteDialogActive:false,
+      		isSaveDialogActive:false,
 		    cityName:'',
 		    cityId:'',
 		    cityCode:'',
@@ -20,7 +20,7 @@ class CityAccountEditor extends Component {
 		    permissions:[
 		    	{id:'1',name:'readyonly',isChecked:true},
 		    	{id:'2',name:'all',isChecked:true},
-		    ],
+		    ]
 	    }
 	}
 
@@ -32,6 +32,7 @@ class CityAccountEditor extends Component {
 			managerId:nextProps.CityInfo.managerId,
 		})
 	}
+
 	handleChangeText = () =>{
 		this.setState({
 			accountName:this.refs.accountNameText.value,
@@ -52,16 +53,26 @@ class CityAccountEditor extends Component {
 	  	this.setState({permissions: this.state.permissions.slice(0)})
 	}
 
-	hideOrShowDialogDel = () => {
-	    this.setState({isDialogActive:!this.state.isDialogActive})
-	}
-	hideOrShowDialogCon = () => {
-	    this.setState({isConfimActive:!this.state.isConfimActive})
-	}
+  	handleDeleteConfirmation = (isActive) => {
+	    this.setState({isDeleteDialogActive:isActive});
+  	}
 
-	hide = () => {
-	   this.props.hideDialog();
-	}
+  	handleDeleteConfirmationYes = () =>{
+	    // todo delete from db  
+	    this.handleDeleteConfirmation(false);
+	    this.props.hideDialog(); 
+  	}
+
+	handleSaveConfirmation = (isActive) => {
+	    this.setState({isSaveDialogActive:isActive});
+  	}
+
+  	handleSaveConfirmationYes = () =>{
+	    // todo save to db  
+	    this.handleSaveConfirmation(false);
+	    this.props.hideDialog(); 
+  	}
+
   	render(){ 		
     	return (
 	        <Dialog theme={theme} active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
@@ -118,23 +129,29 @@ class CityAccountEditor extends Component {
 	                <tr>
 	                    <td>
 	                    	{
-	                    	this.props.isEditMode
-							 ? <input type="button" value="削除" onClick={() => this.hideOrShowDialogDel(true)}/>
-	                    	 : ''
+		                    	this.props.isEditMode
+								 ? <input type="button" value="削除" onClick={this.handleDeleteConfirmation.bind(this, true)}/>
+		                    	 : ''
 	                    	}
 	                    </td>
 	                    <td >
-	                        <input type="button" value="完了" onClick={() => this.hideOrShowDialogCon(true)}/>
+	                        <input type="button" value="完了" onClick={this.handleSaveConfirmation.bind(this, true)} />
 	                        <input type="button" value="キャンセル" onClick={this.props.hideDialog} />
 	                    </td>
 	                </tr>
 	              </tbody>
 	            </table>
-	            <DeleteCom isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialogDel} />
-            	<ConfirmCom isActive={this.state.isConfimActive} hideDialog={this.hideOrShowDialogCon} />
+	            <DeleteConfirmation  
+	              isActive={this.state.isDeleteDialogActive} 
+	              handleDialogYes={this.handleDeleteConfirmationYes}
+	              handleDialogNo={this.handleDeleteConfirmation.bind(this, false)} />
+	            <SaveConfirmation 
+	              isActive={this.state.isSaveDialogActive}
+	              handleDialogYes={this.handleSaveConfirmationYes} 
+	              handleDialogNo={this.handleSaveConfirmation.bind(this, false)} />
 	        </Dialog>
     );
   }
 }
 
-export default CityAccountEditor;
+export default LocalityAccountEditor;

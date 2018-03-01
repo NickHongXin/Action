@@ -52,8 +52,8 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
-    contentBase: publidDir
-  },
-
+    contentBase: publidDir,
+    port:8088
+  }
 };
 

@@ -1,12 +1,12 @@
 import React,{ Component } from 'react';
-import Manager from '../../css/Manager.css';
+import Manager from '../../css/main.css';
 import HospitalAccountManagement from './HospitalAccountManagement';
-import CityAccountManagement from './CityAccountManagement';
+import LocalityAccountManagement from './LocalityAccountManagement';
 import {Route, withRouter} from 'react-router-dom';
 
 const BTN_BG_COLOR = 'btn_background_color';
 
-class ManagerScreen extends Component{
+class Main extends Component{
 	constructor(props){
 		super(props);
 		let userName = sessionStorage.getItem('userName');
@@ -67,11 +67,11 @@ class ManagerScreen extends Component{
 				</div>
 				<div className={Manager.content}>
 					<Route path='/index/hospitalAccount' component={HospitalAccountManagement} />
-					<Route path='/index/cityAccount' component={CityAccountManagement} />
+					<Route path='/index/cityAccount' component={LocalityAccountManagement} />
 				</div>
 			</div>
 		);
 	}
 }
 
-export default withRouter(ManagerScreen);
+export default withRouter(Main);
