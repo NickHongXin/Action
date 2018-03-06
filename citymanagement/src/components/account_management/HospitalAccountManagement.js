@@ -1,7 +1,18 @@
 import React,{ Component } from 'react';
 import Manager from '../../css/main.css';
-import Pages from './Page';
+import Pagination from './Pagination';
 import HospitalAccountEditorTable from './HospitalAccountEditor';
+import * as Api from '../../common/ApiCaller';
+
+const EMPTY_ACCOUNT = {
+	hospitalName:'',
+	hospitalId:'',
+	hospitalCode:'',
+	localityCode:'',
+	displayName:'',
+	mailAddress:'',
+	hospitalUserPermissions:[]
+};
 
 class HospitalAccountManagement extends Component {
 	constructor(props){
@@ -9,19 +20,41 @@ class HospitalAccountManagement extends Component {
 		this.state={
 			isDialogActive:false,
 			hospitalAccounts:[],
-			selectedAccount:{orgName:'',orgId:'',orgCode:'',managerId:'',cityCode:''},
+			selectedAccount:EMPTY_ACCOUNT,
 			searchCondition:'',
-			isEdit:false
-		}
+			isEdit:false,
+			pageSize:25,
+			currentPageNo:1,
+			hospitalPermissions:[]
+		};
 	}
 
 	hideOrShowDialog = () => {
-	   this.setState({isDialogActive:!this.state.isDialogActive})
+	   this.setState({isDialogActive:!this.state.isDialogActive});
+	}
+
+	convert = (item) => {
+		const hospitalUserPermissions = [];
+		this.state.hospitalPermissions.map(permission => {
+			let tempPermission = Object.assign({}, permission)
+			tempPermission['isChecked']=false;
+			if (item && item.hospitalUserPermissions){
+				item.hospitalUserPermissions.map(uPermission => {
+					if (permission.hospitalPermissionId === uPermission.hospitalPermissionId){
+						tempPermission.isChecked = true;
+					}
+				});
+			}
+			hospitalUserPermissions.push(tempPermission);
+		});
+		const hospitalUser = Object.assign({}, item);
+		hospitalUser.hospitalUserPermissions = hospitalUserPermissions;
+		return hospitalUser;
 	}
 
 	handleEdit =(item) =>{
 		this.setState({
-			selectedAccount:item,
+			selectedAccount:this.convert(item),
 			isEdit:true
 		});
 		this.hideOrShowDialog();
@@ -29,50 +62,45 @@ class HospitalAccountManagement extends Component {
 	
 	handleCreate = () => {
 		this.setState({
-			selectedAccount:{orgName:'',orgId:'',orgCode:'',managerId:'',cityCode:''},
+			selectedAccount:this.convert(EMPTY_ACCOUNT),
 			isEdit:false
 		});
 		this.hideOrShowDialog();	
 	}
 
-	changeCode = () =>{
-        this.setState({searchCondition:this.refs.SearchCode.value});
-    }
+	handleChange = (name, event) => {
+	    this.setState({[name]: event.target.value});
+  	}
+
+  	callHospitalAccountApi = () => {
+  		Api.getRequest(
+				'/api/hospitalAccount', 
+				{
+					hospitalName: this.state.searchCondition,
+					pageSize: this.state.pageSize,
+					pageNo: this.state.currentPageNo
+				},
+				Api.getToken())
+			.then(res => {
+				this.setState({
+					hospitalAccounts: res.data.data,
+					hospitalPermissions: res.data.hospitalPermissions
+				});
+			})
+			.catch(error => {
+				if (err.response.status === 401) {
+			        sessionStorage.clear();
+			        this.props.history.push('/');
+		      	}
+			})	
+  	}
+
+  	handleSearch = () => {
+  		this.callHospitalAccountApi();
+  	}
 
 	componentDidMount = () => {
-		const hospitalAccounts = [
-			{orgName:'病院1',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院2',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院3',orgId:'3',orgCode:'345',managerId:'03',cityCode:'345'},
-			{orgName:'病院4',orgId:'4',orgCode:'456',managerId:'04',cityCode:'456'},
-			{orgName:'病院5',orgId:'5',orgCode:'567',managerId:'05',cityCode:'567'},
-			{orgName:'病院6',orgId:'6',orgCode:'678',managerId:'06',cityCode:'678'},
-			{orgName:'病院7',orgId:'7',orgCode:'789',managerId:'07',cityCode:'789'},
-			{orgName:'病院8',orgId:'8',orgCode:'890',managerId:'08',cityCode:'890'},
-			{orgName:'病院9',orgId:'9',orgCode:'901',managerId:'09',cityCode:'901'},
-			{orgName:'病院10',orgId:'10',orgCode:'012',managerId:'010',cityCode:'012'},
-			{orgName:'病院11',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院12',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院13',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院14',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院15',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院16',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院17',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院18',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院19',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院20',orgId:'1',orgCode:'123',managerId:'01',cityCode:'123'},
-			{orgName:'病院21',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院22',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院23',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院24',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院25',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院26',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院27',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院28',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'},
-			{orgName:'病院29',orgId:'2',orgCode:'234',managerId:'02',cityCode:'234'}
-		];
-
-		this.setState({hospitalAccounts: hospitalAccounts});
+		this.callHospitalAccountApi();
 	}
 
   	render(){
@@ -80,11 +108,11 @@ class HospitalAccountManagement extends Component {
 	    	<div className={Manager.accountSearch}>
 				<div className={Manager.searchArea}>
 					<span className={Manager.span}>病院アカウント検索</span>
-					<input type="text" className={Manager.text} ref="SearchCode" value={this.state.searchCondition} onChange={() =>this.changeCode()}/>
-					<button className={Manager.search} >検索 </button>
-					<button className={Manager.new} onClick={() => this.handleCreate()}>新規</button>
+					<input type="text" className={Manager.text} value={this.state.searchCondition} onChange={this.handleChange.bind(this, 'searchCondition')}/>
+					<button className={Manager.search} onClick={this.handleSearch}>検索 </button>
+					<button className={Manager.new} onClick={this.handleCreate}>新規</button>
 				</div>
-				< Pages className={Manager.pageMargin}/>
+				< Pagination className={Manager.pageMargin}/>
 				<div className={Manager.listArea}>
 					<table className={Manager.intable}>
 						<thead>
@@ -103,19 +131,23 @@ class HospitalAccountManagement extends Component {
 								this.state.hospitalAccounts.map((item, idx) => (
 									<tr key={idx}>
 										<td>{idx + 1}</td>
-										<td>{item.orgName}</td>
-										<td>{item.orgId}</td>
-										<td>{item.orgCode}</td>
-										<td>{item.managerId}</td>
-										<td>{item.cityCode}</td>
-										<td><button type="button" className={Manager.edit} onClick={() => this.handleEdit(item)}>編集</button></td>
+										<td>{item.hospitalName}</td>
+										<td>{item.hospitalId}</td>
+										<td>{item.hospitalCode}</td>
+										<td>{item.mailAddress}</td>
+										<td>{item.localityCode}</td>
+										<td><button type="button" className={Manager.edit} onClick={this.handleEdit.bind(this, item)}>編集</button></td>
 									</tr>
 								))
 							}
 						</tbody>
 					</table>
 				</div>
-				 < HospitalAccountEditorTable isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog} accountInfo={this.state.selectedAccount} isEditMode={this.state.isEdit}/>
+			 	<HospitalAccountEditorTable 
+				 	isActive={this.state.isDialogActive} 
+				 	hideDialog={this.hideOrShowDialog} 
+				 	accountInfo={this.state.selectedAccount} 
+				 	isEditMode={this.state.isEdit} />
 
 	    	</div>
 	    );

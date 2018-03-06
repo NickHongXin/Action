@@ -2,7 +2,6 @@ import React,{ Component } from 'react';
 import theme from '../../css/dialogDel.css';
 import Dialog from 'react-toolbox/lib/dialog';
 
-
 class DeleteConfirmation extends Component{
   constructor(props){
     super(props);

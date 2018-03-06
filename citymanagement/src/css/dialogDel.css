@@ -3,23 +3,28 @@
     height: 150px;
     border: 1px solid;
 }
+
 .delMsg{
     text-align: center;
 }
+
 button{
     width: 70px;
     border-color: #41719C;
     border-radius: 8px;
     border-width: 1px;
 }
+
 .buttonNo{
     float:right;  
     display: inline;
     margin-right: 20px;
 }
+
 .buttonYes{
     margin-left: 20px;
 }
+
 .buttonDiv{
     margin-top: 20px;
 }

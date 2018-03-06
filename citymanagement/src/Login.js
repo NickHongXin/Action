@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import Logo from './components/account_management/Logo';
 import { Button } from 'react-toolbox/lib/button';
 import theme from './css/login.css';
+import * as Api from './common/ApiCaller';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
-      zip11: ''
+      mailAddress: '',
+      password: ''
     };
   }
 
@@ -20,39 +20,21 @@ class Login extends Component {
   }
 
   handleSubmit = () => {
-    // var formdata = new FormData();
-    // formdata.set('username', this.state.username);
-    // formdata.set('password', this.state.password);
-
-    // axios({
-    //    method: 'post',
-    //    url: apiList.loginApi,
-    //    data: formdata,
-    //    config
-    //  })
-    //  .then((response) => {
-    //    console.log(response);
-    this.props.history.push('/index/ReservationStatus');
-  //  })
-  //  .catch((err) => {
-  //    console.log(err);
-  //  });
-  }
-
-  handlePostAuto = () => {
-    // AjaxZip3.zip2addr(e.target, '', 'addr11', 'addr11');
-  }
-
-  handleAsyncSubmit = () => {
-    sessionStorage.setItem('userName', this.state.username);
-    this.props.history.push('/index/ReservationStatus');
-  }
-
-  generateUserInfo = () => {
-    return {
-      UserName: this.state.username,
-      Password: this.state.password,
-    };
+    Api.postRequest(
+        '/api/account', 
+        {
+          mailAddress: this.state.mailAddress,
+          password: this.state.password
+        })
+      .then((res) => {
+        sessionStorage.setItem('token', res.data.token);
+        sessionStorage.setItem('userMail', this.state.mailAddress);
+        sessionStorage.setItem('userName', res.data.displayName);
+        this.props.history.push('/index');})
+      .catch((error) => {
+        // todo show error message
+        console.log(error.response)
+    });
   }
 
   render() {
@@ -62,14 +44,14 @@ class Login extends Component {
           <h1 className={ theme.logo }><Logo /></h1>
           <ul className={ theme.input }>
             <li>
-              <input placeholder='ユーザー名' type='text' name='username' value={ this.state.username } onChange={ this.handleChange.bind(this, 'username') } maxLength={ 16 } />
+              <input placeholder='ユーザー名' type='text' name='mailAddress' value={ this.state.mailAddress } onChange={ this.handleChange.bind(this, 'mailAddress') } />
             </li>
             <li>
               <input placeholder='パスワード' type='password' name='password' value={ this.state.password } onChange={ this.handleChange.bind(this, 'password') } />
             </li>
           </ul>
           <div className={ theme.btn }>
-            <Button label='ログイン' className={ theme.loginBt } onClick={ this.handleAsyncSubmit.bind(this) } />
+            <Button label='ログイン' className={ theme.loginBt } onClick={ this.handleSubmit.bind(this) } />
           </div>
         </div>
       </section>

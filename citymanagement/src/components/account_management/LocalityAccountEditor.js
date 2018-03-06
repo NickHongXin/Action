@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import HospitalCss from '../../css/accountEditor.css';
+import HospitalCss from '../../css/edit.css';
 import Dialog from 'react-toolbox/lib/dialog';
 import theme from '../../css/dialog.css';
 import DeleteConfirmation from './DeleteConfirmation';
@@ -81,7 +81,6 @@ class LocalityAccountEditor extends Component {
 	                <tr>
 	                    <td>■ 自治体ID</td>
 	                    <td>
-	                    	
 	                    	{
 	                    	this.props.isEditMode
 							 ? this.state.cityId

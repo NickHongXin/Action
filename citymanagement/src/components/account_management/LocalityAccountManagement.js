@@ -1,6 +1,6 @@
 import React,{ Component } from 'react';
 import Manager from '../../css/main.css';
-import Pages from './Page';
+import Pagination from './Pagination';
 import LocalityAccountEditor from './LocalityAccountEditor';
 
 class LocalityAccountManagement extends Component {
@@ -60,7 +60,7 @@ class LocalityAccountManagement extends Component {
 					<button className={Manager.search} >検索 </button>
 					<button className={Manager.new} onClick={this.hideCreate}>新規</button>
 				</div>
-				< Pages />
+				< Pagination />
 				<div className={Manager.listArea}>
 					<table className={Manager.intable}>
 						<thead>

@@ -15,7 +15,6 @@ class Main extends Component{
 			hostipalBtnBgColor:BTN_BG_COLOR,
 			username: userName,
 			cityBtnBgColor:''
-			
 		}
 	}
  
@@ -44,6 +43,7 @@ class Main extends Component{
  	}
 
  	logout = () => {
+ 		sessionStorage.clear();
  		this.props.history.push('/');
  	}
 

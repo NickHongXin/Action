@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import HospitalCss from '../../css/accountEditor.css';
+import HospitalCss from '../../css/edit.css';
 import Dialog from 'react-toolbox/lib/dialog';
 import DeleteConfirmation from './DeleteConfirmation';
 import SaveConfirmation from './SaveConfirmation';
@@ -11,40 +11,40 @@ class HospitalAccountEditor extends Component {
     this.state={
       isDeleteDialogActive:false,
       isSaveDialogActive:false,
-      orgName:'',
-      orgId:'',
-      orgCode:'',
-      cityCode:'',
-      accountName:'',
-      loginId:'',
-      pwd:'',
-      permissions:[
-        {id:'1',name:'readyonly',isChecked:true},
-        {id:'2',name:'all',isChecked:true},
-      ]
+      hospitalName:'',
+      hospitalId:'',
+      hospitalCode:'',
+      localityCode:'',
+      displayName:'',
+      mailAddress:'',
+      password:'',
+      hospitalUserPermissions:[]
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     this.setState({
-      orgName:nextProps.accountInfo.orgName,
-      orgId:nextProps.accountInfo.orgId,
-      orgCode:nextProps.accountInfo.orgCode,
-      cityCode:nextProps.accountInfo.cityCode
+      hospitalName:nextProps.accountInfo.hospitalName,
+      hospitalId:nextProps.accountInfo.hospitalId,
+      hospitalCode:nextProps.accountInfo.hospitalCode,
+      localityCode:nextProps.accountInfo.localityCode,
+      displayName:nextProps.accountInfo.displayName,
+      mailAddress:nextProps.accountInfo.mailAddress,
+      hospitalUserPermissions:nextProps.accountInfo.hospitalUserPermissions
     })
   }
 
   handleChange = (name, event) => {
-    this.setState({[name]: event.target.value})
+    this.setState({[name]: event.target.value});
   }
 
   handleCheckboxChange = (id) => {
-      this.state.permissions.map((item)=>{
-          if (item.id === id) {
-              item.isChecked= !item.isChecked
-          }
-      })
-    this.setState({permissions: this.state.permissions.slice(0)})
+    this.state.hospitalUserPermissions.map((item) => {
+        if (item.hospitalPermissionId === id) {
+            item.isChecked= !item.isChecked
+        }
+    });
+    this.setState({hospitalUserPermissions: this.state.hospitalUserPermissions.slice(0)});
   }
 
   handleDeleteConfirmation = (isActive) => {
@@ -74,47 +74,46 @@ class HospitalAccountEditor extends Component {
               <tbody>
                 <tr>
                   <td>■ 医療機関ID</td>
-                  <td>{this.state.orgId}</td>    
+                  <td>{this.state.hospitalId}</td>    
                 </tr>
                 <tr>
                   <td>■ 医療機関コード</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.orgCode} onChange={this.handleChange.bind(this, 'orgCode')} /></td> 
+                  <td><input type="text" className={HospitalCss.text} value={this.state.hospitalCode} onChange={this.handleChange.bind(this, 'hospitalCode')} /></td> 
                 </tr>
                 <tr>
                   <td>■ 医療機関名</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.orgName} onChange={this.handleChange.bind(this, 'orgName')} /></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.hospitalName} onChange={this.handleChange.bind(this, 'hospitalName')} /></td>    
                 </tr>
                 <tr>
                   <td>■ 管轄自治体コード</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.cityCode} onChange={this.handleChange.bind(this, 'cityCode')} /></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /></td>    
                 </tr>
                 <tr>
                   <td>■ アカウント名</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.accountName} onChange={this.handleChange.bind(this,'accountName')}/></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this,'displayName')}/></td>    
                 </tr>
                 <tr>
                   <td>■ ログインID</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.loginId} onChange={this.handleChange.bind(this,'loginId')}/></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this,'mailAddress')}/></td>    
                 </tr>
                 <tr>
                   <td>■ パスワード</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.pwd} onChange={this.handleChange.bind(this,'pwd')}/></td>
+                  <td><input type="text" className={HospitalCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/></td>
                 </tr>
                 <tr>
                   <td>■ 権限</td>
                   <td>
                       {
-                          this.state.permissions.map((item,idx) => {
+                          this.state.hospitalUserPermissions.map((item,idx) => {
                               return (
                               <div key={idx}>
                                   <input type='checkbox' 
                                       checked={item.isChecked}
-                                      onChange={this.handleCheckboxChange.bind(this, item.id)}/>
-                                  {item.name}<br />
+                                      onChange={this.handleCheckboxChange.bind(this, item.hospitalPermissionId)}/>
+                                  {item.description}<br />
                              </div>)
                           })
                       }
-                    
                   </td>     
                 </tr>
                 <tr>
