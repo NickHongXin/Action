@@ -4,20 +4,22 @@ import Dialog from 'react-toolbox/lib/dialog';
 import DeleteConfirmation from './DeleteConfirmation';
 import SaveConfirmation from './SaveConfirmation';
 import theme from '../../css/dialog.css';
+import * as Api from '../../common/ApiCaller';
 
 class HospitalAccountEditor extends Component {
   constructor(props){
     super(props);
-    this.state={
+    this.state = {
       isDeleteDialogActive:false,
       isSaveDialogActive:false,
       hospitalName:'',
-      hospitalId:'',
+      hospitalId:0,
       hospitalCode:'',
       localityCode:'',
       displayName:'',
       mailAddress:'',
       password:'',
+      hospitalUserId:0,
       hospitalUserPermissions:[]
     }
   }
@@ -30,8 +32,10 @@ class HospitalAccountEditor extends Component {
       localityCode:nextProps.accountInfo.localityCode,
       displayName:nextProps.accountInfo.displayName,
       mailAddress:nextProps.accountInfo.mailAddress,
+      password: '',
+      hospitalUserId: nextProps.accountInfo.hospitalUserId,
       hospitalUserPermissions:nextProps.accountInfo.hospitalUserPermissions
-    })
+    });
   }
 
   handleChange = (name, event) => {
@@ -51,7 +55,7 @@ class HospitalAccountEditor extends Component {
     this.setState({isDeleteDialogActive:isActive});
   }
 
-  handleDeleteConfirmationYes = () =>{
+  handleDeleteConfirmationYes = () => {
     // todo delete from db  
     this.handleDeleteConfirmation(false);
     this.props.hideDialog(); 
@@ -61,10 +65,40 @@ class HospitalAccountEditor extends Component {
     this.setState({isSaveDialogActive:isActive});
   }
 
-  handleSaveConfirmationYes = () =>{
-    // todo save to db  
-    this.handleSaveConfirmation(false);
-    this.props.hideDialog(); 
+  handleSaveConfirmationYes = () => {
+    const hospitalPermissionIds = [];
+    this.state.hospitalUserPermissions.map(item => {
+      if (item.isChecked) {
+        hospitalPermissionIds.push(item.hospitalPermissionId);
+      }
+    });
+    if (this.props.isEditMode) {
+
+    } else {
+      Api.postRequest(
+        '/api/hospitalAccount', 
+        {
+          hospitalCode: this.state.hospitalCode,
+          hospitalName: this.state.hospitalName,
+          localityCode: this.state.localityCode,
+          displayName: this.state.displayName,
+          mailAddress: this.state.mailAddress,
+          password: this.state.password,
+          hospitalPermissionIds: hospitalPermissionIds
+        })
+        .then((res) => {
+          Api.setToken(res.headers.authorization);
+          this.handleSaveConfirmation(false);
+          this.props.hideDialog(); 
+        })
+        .catch((error, data) => {
+          console.log(`res error: ${data}`)
+          if (error.response.status === 401) {
+            sessionStorage.clear();
+            this.props.history.push('/');
+          }
+      });
+    }
   }
 
   render ()  {
@@ -74,7 +108,7 @@ class HospitalAccountEditor extends Component {
               <tbody>
                 <tr>
                   <td>■ 医療機関ID</td>
-                  <td>{this.state.hospitalId}</td>    
+                  <td>{this.props.isEditMode ? this.state.hospitalId : ''}</td>    
                 </tr>
                 <tr>
                   <td>■ 医療機関コード</td>

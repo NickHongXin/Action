@@ -8,7 +8,7 @@ import SaveConfirmation from './SaveConfirmation';
 class LocalityAccountEditor extends Component {
 	constructor(props){
 	   	super(props);
-	    this.state={
+	    this.state = {
       		isDeleteDialogActive:false,
       		isSaveDialogActive:false,
 		    cityName:'',

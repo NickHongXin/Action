@@ -6,26 +6,28 @@ import * as Api from '../../common/ApiCaller';
 
 const EMPTY_ACCOUNT = {
 	hospitalName:'',
-	hospitalId:'',
+	hospitalId:0,
 	hospitalCode:'',
 	localityCode:'',
 	displayName:'',
 	mailAddress:'',
+	hospitalUserId:0,
 	hospitalUserPermissions:[]
 };
 
 class HospitalAccountManagement extends Component {
 	constructor(props){
 		super(props);
-		this.state={
+		this.state = {
 			isDialogActive:false,
 			hospitalAccounts:[],
 			selectedAccount:EMPTY_ACCOUNT,
 			searchCondition:'',
 			isEdit:false,
-			pageSize:25,
+			pageSize:3,
 			currentPageNo:1,
-			hospitalPermissions:[]
+			hospitalPermissions:[],
+			totalPage:0
 		};
 	}
 
@@ -52,7 +54,7 @@ class HospitalAccountManagement extends Component {
 		return hospitalUser;
 	}
 
-	handleEdit =(item) =>{
+	handleEdit =(item) => {
 		this.setState({
 			selectedAccount:this.convert(item),
 			isEdit:true
@@ -72,35 +74,41 @@ class HospitalAccountManagement extends Component {
 	    this.setState({[name]: event.target.value});
   	}
 
-  	callHospitalAccountApi = () => {
+  	callHospitalAccountApi = (currentPage) => {
   		Api.getRequest(
-				'/api/hospitalAccount', 
-				{
-					hospitalName: this.state.searchCondition,
-					pageSize: this.state.pageSize,
-					pageNo: this.state.currentPageNo
-				},
-				Api.getToken())
+			'/api/hospitalAccount', 
+			{
+				hospitalName: this.state.searchCondition,
+				pageSize: this.state.pageSize,
+				pageNo: currentPage
+			})
 			.then(res => {
+				let totalCount = res.data.totalCount;
+				let totalPage = Math.floor(totalCount === 0 ? 0 : totalCount / this.state.pageSize + (totalCount % this.state.pageSize > 0 ? 1 : 0));
 				this.setState({
 					hospitalAccounts: res.data.data,
-					hospitalPermissions: res.data.hospitalPermissions
+					hospitalPermissions: res.data.hospitalPermissions,
+					totalPage: totalPage
 				});
+				Api.setToken(res.headers.authorization);
 			})
 			.catch(error => {
-				if (err.response.status === 401) {
+				if (error.response.status === 401) {
 			        sessionStorage.clear();
 			        this.props.history.push('/');
 		      	}
-			})	
+			});
   	}
 
-  	handleSearch = () => {
-  		this.callHospitalAccountApi();
+  	handleSearch = (currentPage) => {
+  		this.callHospitalAccountApi(currentPage);
+  		this.setState({
+  			currentPageNo:currentPage
+  		});
   	}
 
 	componentDidMount = () => {
-		this.callHospitalAccountApi();
+		this.callHospitalAccountApi(1);
 	}
 
   	render(){
@@ -109,10 +117,14 @@ class HospitalAccountManagement extends Component {
 				<div className={Manager.searchArea}>
 					<span className={Manager.span}>病院アカウント検索</span>
 					<input type="text" className={Manager.text} value={this.state.searchCondition} onChange={this.handleChange.bind(this, 'searchCondition')}/>
-					<button className={Manager.search} onClick={this.handleSearch}>検索 </button>
+					<button className={Manager.search} onClick={this.handleSearch.bind(this, 1)}>検索 </button>
 					<button className={Manager.new} onClick={this.handleCreate}>新規</button>
 				</div>
-				< Pagination className={Manager.pageMargin}/>
+				<Pagination 
+					className={Manager.pageMargin}
+					totalPage={this.state.totalPage}
+					currentPage={this.state.currentPageNo}
+					handleSearch={this.handleSearch} />
 				<div className={Manager.listArea}>
 					<table className={Manager.intable}>
 						<thead>
@@ -148,7 +160,6 @@ class HospitalAccountManagement extends Component {
 				 	hideDialog={this.hideOrShowDialog} 
 				 	accountInfo={this.state.selectedAccount} 
 				 	isEditMode={this.state.isEdit} />
-
 	    	</div>
 	    );
   	}

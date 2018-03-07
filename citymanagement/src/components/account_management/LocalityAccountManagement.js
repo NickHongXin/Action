@@ -6,7 +6,7 @@ import LocalityAccountEditor from './LocalityAccountEditor';
 class LocalityAccountManagement extends Component {
 	constructor(props){
 		super(props);
-		this.state={
+		this.state = {
 			isDialogActive:false,
 			cityAccounts:[],
 			selectCityAccounts:{cityName:'',cityId:'',cityCode:'',managerId:''},
@@ -14,7 +14,7 @@ class LocalityAccountManagement extends Component {
 			isEdit:false
 		}
 	}
-	changeSearchCode = () =>{
+	changeSearchCode = () => {
 		this.setState({searchCondition:this.refs.SearchCode.value})
 	}
 
@@ -28,7 +28,7 @@ class LocalityAccountManagement extends Component {
         });
   		this.hideOrShowDialog();
   	}
-  	hideCreate = () =>{
+  	hideCreate = () => {
 		this.setState({
             selectCityAccounts:{},
             isEdit:false

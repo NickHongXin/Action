@@ -20,12 +20,12 @@ class Login extends Component {
   }
 
   handleSubmit = () => {
-    Api.postRequest(
-        '/api/account', 
-        {
-          mailAddress: this.state.mailAddress,
-          password: this.state.password
-        })
+    Api.login(
+      '/api/account', 
+      {
+        mailAddress: this.state.mailAddress,
+        password: this.state.password
+      })
       .then((res) => {
         sessionStorage.setItem('token', res.data.token);
         sessionStorage.setItem('userMail', this.state.mailAddress);

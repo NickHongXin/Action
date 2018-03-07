@@ -9,17 +9,22 @@ const BTN_BG_COLOR = 'btn_background_color';
 class Main extends Component{
 	constructor(props){
 		super(props);
-		let userName = sessionStorage.getItem('userName');
 		this.state={
 			isDialogActive:false,
 			hostipalBtnBgColor:BTN_BG_COLOR,
-			username: userName,
+			userName: null,
 			cityBtnBgColor:''
 		}
 	}
  
  	componentDidMount = () => {
- 		this.props.history.push('/index/hospitalAccount')
+ 		let userName = sessionStorage.getItem('userName');
+ 		if (userName) {
+ 			this.setState({userName: userName});
+ 			this.props.history.push('/index/hospitalAccount');
+ 		} else {
+ 			this.logout();
+ 		}
  	}
 
  	handleHospitalBtnClick = () => {
@@ -55,7 +60,7 @@ class Main extends Component{
 		            <div className={Manager.r_f}>
 		              <button type="button" className={Manager.btn_setup} >設定</button>
 		              <button type="button" className={Manager.btn_logout} onClick={this.logout}>ログアウト</button>
-		              <span className={Manager.loginUser}>{ this.state.username }</span>
+		              <span className={Manager.loginUser}>{ this.state.userName }</span>
 		            </div>
 	         	</div>
 	         	<div className={Manager.emptyArea} />

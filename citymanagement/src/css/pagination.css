@@ -5,21 +5,14 @@
 }
 
 .link {
-
+	color: #4472C4;
 	display: table;
 	float: left;
 	line-height: 1;
 	margin-right: 5px;
 }
 
-.link span {
-	color: #dadada;
-	font-weight: bold;
-	font-size: 18px;
-}
-
-.link span a {
-	color: #4472C4;
+.link a {
 	font-weight: bold;
 	font-size: 18px;
 	text-decoration: none;
@@ -30,20 +23,28 @@
 	padding-right: 8px;
 }
 
+.link_left_disable {
+	color: #dadada;
+}
+
 .link_right {
 	display: table-cell;
 	padding-left: 8px;
+}
+
+.link_right_disable {
+	color: #dadada;
 }
 
 .textlink {
 	float:left;
 	display: table;
 	padding-top: -15px;
+	color: #4472C4;
 }
 
 .textlink li {
 	display: table-cell;
-	color: #dadada;
 	border-right: 1px solid #dfdfdf;
 	padding: 0 8px;
 	line-height: 1;
@@ -57,5 +58,8 @@
 .textlink li a {
 	font-size: 18px;
 	text-decoration: none;
-	color: #4472C4;
+}
+
+.textlink_disable {
+	color: #dadada;
 }

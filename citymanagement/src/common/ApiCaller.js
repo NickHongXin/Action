@@ -23,29 +23,35 @@ export const setToken = (token) => {
   return sessionStorage.setItem('token', token.split(' ')[1]);
 };
 
-export const getRequest = (path, params, token) => {
-  setHeaders(token);
+export const getRequest = (path, params) => {
+  setHeaders(getToken());
   return instance.get(path, {
     params: params
   });
 };
 
-export const deleteRequest = (path, params, token) => {
-  setHeaders(token);
+export const deleteRequest = (path, params) => {
+  setHeaders(getToken());
   return instance.delete(path, {
     params: params
   });
 };
 
 export const postRequest = (path, data) => {
+  setHeaders(getToken());
   return instance.post(path, data);
 };
 
-export const putRequest = (path, data, token) => {
-  setHeaders(token);
+export const putRequest = (path, data) => {
+  setHeaders(getToken());
   return instance.put(path, data);
 };
 
 export const patchRequest = (path, data) => {
+  setHeaders(getToken());
   return instance.patch(path, data);
+};
+
+export const login = (path, data) => {
+  return instance.post(path, data);
 };
