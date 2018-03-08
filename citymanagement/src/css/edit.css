@@ -31,3 +31,10 @@ input[type="button"]{
     outline:none;
 }
 
+.errorMessage {
+    font-size: 15px;
+    color:red;
+    height: 15px;
+    width: 100%;
+}
+

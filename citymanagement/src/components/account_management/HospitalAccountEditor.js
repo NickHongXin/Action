@@ -18,9 +18,10 @@ class HospitalAccountEditor extends Component {
       localityCode:'',
       displayName:'',
       mailAddress:'',
-      password:'',
+      password:'123456',
       hospitalUserId:0,
-      hospitalUserPermissions:[]
+      hospitalUserPermissions:[],
+      errorMessage:''
     }
   }
 
@@ -32,7 +33,7 @@ class HospitalAccountEditor extends Component {
       localityCode:nextProps.accountInfo.localityCode,
       displayName:nextProps.accountInfo.displayName,
       mailAddress:nextProps.accountInfo.mailAddress,
-      password: '',
+      password: '123456',
       hospitalUserId: nextProps.accountInfo.hospitalUserId,
       hospitalUserPermissions:nextProps.accountInfo.hospitalUserPermissions
     });
@@ -52,16 +53,32 @@ class HospitalAccountEditor extends Component {
   }
 
   handleDeleteConfirmation = (isActive) => {
+    this.changeErrorMessage('');
     this.setState({isDeleteDialogActive:isActive});
   }
 
   handleDeleteConfirmationYes = () => {
-    // todo delete from db  
-    this.handleDeleteConfirmation(false);
-    this.props.hideDialog(); 
+    Api.deleteRequest(`/api/hospitalAccount?hospitalUserId=${this.state.hospitalUserId}`)
+        .then((res) => {
+          Api.setToken(res.headers.authorization);
+          this.handleDeleteConfirmation(false);
+          this.props.hideDialog(); 
+        })
+        .catch((error) => {
+          if (error.response) {
+            if (error.response.status === 401) {
+              sessionStorage.clear();
+              this.props.history.push('/');
+            } else {
+              this.handleDeleteConfirmation(false);
+              this.changeErrorMessage(error.response.data);
+            }
+          }
+      }); 
   }
 
   handleSaveConfirmation = (isActive) => {
+    this.changeErrorMessage('');
     this.setState({isSaveDialogActive:isActive});
   }
 
@@ -73,7 +90,35 @@ class HospitalAccountEditor extends Component {
       }
     });
     if (this.props.isEditMode) {
-
+      Api.putRequest(
+        '/api/hospitalAccount', 
+        {
+          hospitalId: this.state.hospitalId,
+          hospitalCode: this.state.hospitalCode,
+          hospitalName: this.state.hospitalName,
+          localityCode: this.state.localityCode,
+          displayName: this.state.displayName,
+          mailAddress: this.state.mailAddress,
+          password: this.state.password,
+          hospitalUserId: this.state.hospitalUserId,
+          hospitalPermissionIds: hospitalPermissionIds
+        })
+        .then((res) => {
+          Api.setToken(res.headers.authorization);
+          this.handleSaveConfirmation(false);
+          this.props.hideDialog(); 
+        })
+        .catch((error) => {
+          if (error.response) {
+            if (error.response.status === 401) {
+              sessionStorage.clear();
+              this.props.history.push('/');
+            } else {
+              this.handleSaveConfirmation(false);
+              this.changeErrorMessage(error.response.data);
+            }
+          }
+      });
     } else {
       Api.postRequest(
         '/api/hospitalAccount', 
@@ -91,19 +136,33 @@ class HospitalAccountEditor extends Component {
           this.handleSaveConfirmation(false);
           this.props.hideDialog(); 
         })
-        .catch((error, data) => {
-          console.log(`res error: ${data}`)
-          if (error.response.status === 401) {
-            sessionStorage.clear();
-            this.props.history.push('/');
+        .catch((error) => {
+          if (error.response) {
+            if (error.response.status === 401) {
+              sessionStorage.clear();
+              this.props.history.push('/');
+            } else {
+              this.handleSaveConfirmation(false);
+              this.changeErrorMessage(error.response.data);
+            }
           }
       });
     }
   }
 
+  changeErrorMessage = (message) => {
+    this.setState({errorMessage: message});
+  }
+
+  handleCancel = () => {
+    this.changeErrorMessage('');
+    this.props.hideDialog();
+  }
+
   render ()  {
     return (
         <Dialog theme={theme} active={this.props.isActive}>
+            <div className={HospitalCss.errorMessage}>{this.state.errorMessage}</div>
             <table className={HospitalCss.htable} align="center">
               <tbody>
                 <tr>
@@ -132,7 +191,7 @@ class HospitalAccountEditor extends Component {
                 </tr>
                 <tr>
                   <td>■ パスワード</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/></td>
+                  <td><input type="password" className={HospitalCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/></td>
                 </tr>
                 <tr>
                   <td>■ 権限</td>
@@ -158,13 +217,14 @@ class HospitalAccountEditor extends Component {
                         : ''
                       }
                   </td>
-                  <td >
+                  <td>
                       <input type="button" value="完了" onClick={this.handleSaveConfirmation.bind(this, true)} />
-                      <input type="button" value="キャンセル" onClick={this.props.hideDialog} />
+                      <input type="button" value="キャンセル" onClick={this.handleCancel} />
                   </td>
                 </tr>
               </tbody>
-            </table>  
+            </table>
+            
             <DeleteConfirmation  
               isActive={this.state.isDeleteDialogActive} 
               handleDialogYes={this.handleDeleteConfirmationYes}

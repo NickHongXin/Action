@@ -24,7 +24,7 @@ class HospitalAccountManagement extends Component {
 			selectedAccount:EMPTY_ACCOUNT,
 			searchCondition:'',
 			isEdit:false,
-			pageSize:3,
+			pageSize:6,
 			currentPageNo:1,
 			hospitalPermissions:[],
 			totalPage:0
@@ -93,7 +93,7 @@ class HospitalAccountManagement extends Component {
 				Api.setToken(res.headers.authorization);
 			})
 			.catch(error => {
-				if (error.response.status === 401) {
+				if (error.response && error.response.status === 401) {
 			        sessionStorage.clear();
 			        this.props.history.push('/');
 		      	}
