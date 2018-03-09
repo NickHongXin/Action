@@ -197,15 +197,15 @@ class HospitalAccountEditor extends Component {
                   <td>■ 権限</td>
                   <td>
                       {
-                          this.state.hospitalUserPermissions.map((item,idx) => {
-                              return (
-                              <div key={idx}>
-                                  <input type='checkbox' 
-                                      checked={item.isChecked}
-                                      onChange={this.handleCheckboxChange.bind(this, item.hospitalPermissionId)}/>
-                                  {item.description}<br />
-                             </div>)
-                          })
+                        this.state.hospitalUserPermissions.map((item,idx) => {
+                            return (
+                            <div key={idx}>
+                                <input type='checkbox' 
+                                    checked={item.isChecked}
+                                    onChange={this.handleCheckboxChange.bind(this, item.hospitalPermissionId)}/>
+                                {item.description}<br />
+                           </div>)
+                        })
                       }
                   </td>     
                 </tr>

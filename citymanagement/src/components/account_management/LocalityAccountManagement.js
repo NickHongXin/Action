@@ -2,16 +2,33 @@ import React,{ Component } from 'react';
 import Manager from '../../css/main.css';
 import Pagination from './Pagination';
 import LocalityAccountEditor from './LocalityAccountEditor';
+import * as Api from '../../common/ApiCaller';
+
+const EMPTY_ACCOUNT = {
+	localityName:'',
+	localityId:0,
+	localityCode:'',
+	mailAddress:'',
+	displayName:'',
+	localityUserId:'',
+	localityUserPermissions:[]
+}
 
 class LocalityAccountManagement extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
 			isDialogActive:false,
-			cityAccounts:[],
+			localityAccounts:[],
+			localityPermissions:[],
+			selectlocalityAccounts:EMPTY_ACCOUNT,
 			selectCityAccounts:{cityName:'',cityId:'',cityCode:'',managerId:''},
 			searchCondition:'',
-			isEdit:false
+			isEdit:false,
+			pageSize:5,
+			currentPageNo:1,
+			totalPage:0,
+			localityPermissions:[]
 		}
 	}
 	changeSearchCode = () => {
@@ -21,35 +38,78 @@ class LocalityAccountManagement extends Component {
     hideOrShowDialog = () => {
 	    this.setState({isDialogActive:!this.state.isDialogActive})
   	}
-  	hideEdit = (item) => {
+
+  	convert = (item) => {
+  		const localityUserPermissions = [];
+		this.state.localityPermissions.map(permission => {
+			let tempPermission = Object.assign({}, permission)
+			tempPermission['isChecked']=false;
+			if (item && item.localityUserPermissions){
+				item.localityUserPermissions.map(uPermission => {
+					if (permission.localityPermissionId === uPermission.localityPermissionId){
+						tempPermission.isChecked = true;
+					}
+				});
+			}
+			localityUserPermissions.push(tempPermission);
+		});
+		const localityUser = Object.assign({}, item);
+		localityUser.localityUserPermissions = localityUserPermissions;
+		return localityUser;
+  	}
+
+  	handleEdit = (item) => {
   		this.setState({
-            selectCityAccounts:item,
+            selectlocalityAccounts:this.convert(item),
             isEdit:true
         });
   		this.hideOrShowDialog();
   	}
-  	hideCreate = () => {
+
+  	handleCreate = () => {
 		this.setState({
-            selectCityAccounts:{},
+            selectlocalityAccounts:this.convert(EMPTY_ACCOUNT),
             isEdit:false
         });
   		this.hideOrShowDialog();
   	}
+
+  	callLocalityAccountApi = (currentPage) => {
+  		Api.getRequest(
+  			'/api/localityAccount',
+  			{
+  				localityName: this.state.searchCondition,
+  				pageSize:this.state.pageSize,
+  				pageNo:currentPage
+  			})
+  			.then(res =>{
+  				let totalCount = res.data.totalCount;
+  				let totalPage = Math.floor(totalCount === 0 ? 0:totalCount / this.state.pageSize + (totalCount % this.state.pageSize > 0 ? 1 :0));
+  				this.setState({
+  					localityAccounts:res.data.data,
+  					localityPermissions:res.data.localitPermissions,
+  					totalPage:totalPage
+  				});
+  				Api.setToken(res.headers.authorization);
+  			})
+  			.catch(error => {
+  				if(error.response && error.response.status === 401) {
+  					sessionStorage.clear();
+  					this.props.history.push('/');
+  				}
+  			});
+  	}
+
+  	handleSearch = (currentPage) => {
+  		this.callLocalityAccountApi(currentPage);
+  		this.setState({
+  			currentPageNo:currentPage
+  		})
+  	}
+
   	componentDidMount = () => {
-		const cityAccounts = [
-			{cityName:'A市',cityId:'1',cityCode:'123',managerId:'01'},
-			{cityName:'B市',cityId:'2',cityCode:'234',managerId:'02'},
-			{cityName:'C市',cityId:'3',cityCode:'345',managerId:'03'},
-			{cityName:'D市',cityId:'4',cityCode:'456',managerId:'04'},
-			{cityName:'E市',cityId:'5',cityCode:'567',managerId:'05'},
-			{cityName:'F市',cityId:'6',cityCode:'678',managerId:'06'},
-			{cityName:'G市',cityId:'7',cityCode:'789',managerId:'07'},
-			{cityName:'H市',cityId:'8',cityCode:'890',managerId:'08'},
-			{cityName:'I市',cityId:'9',cityCode:'901',managerId:'09'},
-			{cityName:'J市',cityId:'10',cityCode:'012',managerId:'010'}
-		];
-		this.setState({cityAccounts: cityAccounts});
-	}
+  		this.callLocalityAccountApi(1);
+  	}
 
   	render(){
 	    return (
@@ -57,10 +117,14 @@ class LocalityAccountManagement extends Component {
 				<div className={Manager.searchArea}>
 					<span className={Manager.span}>自治体アカウント検索</span>
 					<input type="text" className={Manager.text} ref="SearchCode" value={this.state.searchCondition} onChange={this.changeSearchCode}/>
-					<button className={Manager.search} >検索 </button>
-					<button className={Manager.new} onClick={this.hideCreate}>新規</button>
+					<button className={Manager.search} onClick={this.handleSearch.bind(this,1)} >検索 </button>
+					<button className={Manager.new} onClick={this.handleCreate}>新規</button>
 				</div>
-				< Pagination />
+				< Pagination 
+					className={Manager.pageMargin}
+					totalPage={this.state.totalPage}
+					currentPage={this.state.currentPageNo}
+					handleSearch={this.handleSearch} />
 				<div className={Manager.listArea}>
 					<table className={Manager.intable}>
 						<thead>
@@ -75,21 +139,25 @@ class LocalityAccountManagement extends Component {
 						</thead>
 						<tbody>
 							{
-								this.state.cityAccounts.map((item, idx) => (
+								this.state.localityAccounts.map((item, idx) => (
 									<tr key={idx}>
 										<td>{idx + 1}</td>
-										<td>{item.cityName}</td>
-										<td>{item.cityId}</td>
-										<td>{item.cityCode}</td>
-										<td>{item.managerId}</td>
-										<td><button type="button" className={Manager.edit} onClick={() => this.hideEdit(item)}>編集</button></td>
+										<td>{item.localityName}</td>
+										<td>{item.localityId}</td>
+										<td>{item.localityCode}</td>
+										<td>{item.mailAddress}</td>
+										<td><button type="button" className={Manager.edit} onClick={this.handleEdit.bind(this,item)}>編集</button></td>
 									</tr>
 								))
 							}
 						</tbody>
 					</table>
 				</div>
-				<LocalityAccountEditor isActive={this.state.isDialogActive} hideDialog={this.hideOrShowDialog}  CityInfo={this.state.selectCityAccounts} isEditMode={this.state.isEdit}/>
+				<LocalityAccountEditor 
+				isActive={this.state.isDialogActive} 
+				hideDialog={this.hideOrShowDialog}  
+				localityInfo={this.state.selectlocalityAccounts} 
+				isEditMode={this.state.isEdit} />
 			</div>
 	    );
     }
