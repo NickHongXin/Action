@@ -58,7 +58,7 @@ class LocalityAccountEditor extends Component {
 	}
 
   	handleDeleteConfirmation = (isActive) => {
-  		this.chengeErrorMessage('');
+  		this.changeErrorMessage('');
 	    this.setState({isDeleteDialogActive:isActive});
   	}
 
@@ -103,7 +103,7 @@ class LocalityAccountEditor extends Component {
 			        localityCode: this.state.localityCode,
 			        localityName: this.state.localityName,
 			        displayName: this.state.displayName,
-			        loginUserId: this.state.loginUserId,
+			        mailAddress: this.state.loginUserId,
 			        password: this.state.password,
 			        localityUserId: this.state.localityUserId,
 			        localityPermissionIds: localityPermissionIds
@@ -125,31 +125,31 @@ class LocalityAccountEditor extends Component {
 		        }
 	    	});
 	    }else{
-	    	Api.postRequest(
-	    		'/api/localityAccount',
-	    		{
-	    			localityCode: this.state.localityCode,
-			        localityName: this.state.localityName,
-			        displayName: this.state.displayName,
-			        loginUserId: this.state.loginUserId,
-			        password: this.state.password,
-			        localityPermissionIds: localityPermissionIds
-	    		})
-	    		.then((res) =>{
-	    			Api.setToken(res.headers.authorization);
-	    			this.handleSaveConfirmation(false);
-	    			this.props.hideDialog();
-	    		}).catch((error) =>{
-	    			if (error.response) {
-			            if (error.response.status === 401) {
-			              sessionStorage.clear();
-			              this.props.history.push('/');
-			            } else {
-			              this.handleSaveConfirmation(false);
-			              this.changeErrorMessage(error.response.data);
-			            }
-			          }
-			      });
+    	Api.postRequest(
+    		'/api/localityAccount',
+    		{
+    			localityCode: this.state.localityCode,
+		        localityName: this.state.localityName,
+		        displayName: this.state.displayName,
+		        mailAddress: this.state.loginUserId,
+		        password: this.state.password,
+		        localityPermissionIds: localityPermissionIds
+    		})
+    		.then((res) =>{
+    			Api.setToken(res.headers.authorization);
+    			this.handleSaveConfirmation(false);
+    			this.props.hideDialog();
+    		}).catch((error) =>{
+    			if (error.response) {
+		            if (error.response.status === 401) {
+		              sessionStorage.clear();
+		              this.props.history.push('/');
+		            } else {
+		              this.handleSaveConfirmation(false);
+		              this.changeErrorMessage(error.response.data);
+		            }
+		          }
+		      });
 	    }
   	}
 
@@ -166,6 +166,7 @@ class LocalityAccountEditor extends Component {
   	render(){ 		
     	return (
 	        <Dialog theme={theme} active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
+	            <div className={HospitalCss.errorMessage}>{this.state.errorMessage}</div>
 	            <table className={HospitalCss.htable} align="center">
 	              <tbody>
 	                <tr>
@@ -186,11 +187,11 @@ class LocalityAccountEditor extends Component {
 	                </tr>
 	                <tr>
 	                    <td>■ ログインID</td>
-	                    <td><input type="text" className={HospitalCss.text} value={this.state.loginUserId } onChange={this.handleChange.bind(this, 'loginUserId')} /></td>    
+	                    <td><input type="text" className={HospitalCss.text} value={this.state.loginUserId} onChange={this.handleChange.bind(this, 'loginUserId')} /></td>    
 	                </tr>
 	                <tr>
 	                    <td>■ パスワード</td>
-	                    <td><input type="text" className={HospitalCss.text} ref="passWordText" value={this.state.password}  onChange={this.handleChangeText}/></td>
+	                    <td><input type="text" className={HospitalCss.text} value={this.state.password} onChange={this.handleChange.bind(this, 'password')} /></td>
 	                </tr>
 	                <tr>
 	                    <td>■ 権限</td>

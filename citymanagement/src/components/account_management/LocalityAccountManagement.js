@@ -87,7 +87,7 @@ class LocalityAccountManagement extends Component {
   				let totalPage = Math.floor(totalCount === 0 ? 0:totalCount / this.state.pageSize + (totalCount % this.state.pageSize > 0 ? 1 :0));
   				this.setState({
   					localityAccounts:res.data.data,
-  					localityPermissions:res.data.localitPermissions,
+  					localityPermissions:res.data.localityPermissions,
   					totalPage:totalPage
   				});
   				Api.setToken(res.headers.authorization);
@@ -145,10 +145,11 @@ class LocalityAccountManagement extends Component {
 										<td>{item.localityName}</td>
 										<td>{item.localityId}</td>
 										<td>{item.localityCode}</td>
-										<td>{item.mailAddress}</td>
+										<td>{item.loginUserId}</td>
 										<td><button type="button" className={Manager.edit} onClick={this.handleEdit.bind(this,item)}>編集</button></td>
 									</tr>
 								))
+
 							}
 						</tbody>
 					</table>
