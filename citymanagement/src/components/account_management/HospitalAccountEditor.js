@@ -1,41 +1,44 @@
 import React, { Component } from 'react';
-import HospitalCss from '../../css/edit.css';
+import EditCss from '../../css/edit.css';
 import Dialog from 'react-toolbox/lib/dialog';
 import DeleteConfirmation from './DeleteConfirmation';
 import SaveConfirmation from './SaveConfirmation';
 import theme from '../../css/dialog.css';
 import * as Api from '../../common/ApiCaller';
+import * as Constants from '../../common/Constants';
+import Logout from '../function/Logout';
+import {withRouter} from 'react-router-dom';
 
 class HospitalAccountEditor extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      isDeleteDialogActive:false,
-      isSaveDialogActive:false,
-      hospitalName:'',
-      hospitalId:0,
-      hospitalCode:'',
-      localityCode:'',
-      displayName:'',
-      mailAddress:'',
-      password:'123456',
-      hospitalUserId:0,
-      hospitalUserPermissions:[],
-      errorMessage:''
+      isDeleteDialogActive: false,
+      isSaveDialogActive: false,
+      hospitalName: Constants.EMPTY_STRING,
+      hospitalId: 0,
+      hospitalCode: Constants.EMPTY_STRING,
+      localityCode: Constants.EMPTY_STRING,
+      displayName: Constants.EMPTY_STRING,
+      mailAddress: Constants.EMPTY_STRING,
+      password: Constants.EMPTY_STRING,
+      hospitalUserId: 0,
+      hospitalUserPermissions: [],
+      errorMessage: Constants.EMPTY_STRING
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
     this.setState({
-      hospitalName:nextProps.accountInfo.hospitalName,
-      hospitalId:nextProps.accountInfo.hospitalId,
-      hospitalCode:nextProps.accountInfo.hospitalCode,
-      localityCode:nextProps.accountInfo.localityCode,
-      displayName:nextProps.accountInfo.displayName,
-      mailAddress:nextProps.accountInfo.mailAddress,
-      password: '123456',
+      hospitalName: nextProps.accountInfo.hospitalName,
+      hospitalId: nextProps.accountInfo.hospitalId,
+      hospitalCode: nextProps.accountInfo.hospitalCode,
+      localityCode: nextProps.accountInfo.localityCode,
+      displayName: nextProps.accountInfo.displayName,
+      mailAddress: nextProps.accountInfo.mailAddress,
+      password: Constants.DEFAULT_PASSWORD,
       hospitalUserId: nextProps.accountInfo.hospitalUserId,
-      hospitalUserPermissions:nextProps.accountInfo.hospitalUserPermissions
+      hospitalUserPermissions: nextProps.accountInfo.hospitalUserPermissions
     });
   }
 
@@ -46,29 +49,29 @@ class HospitalAccountEditor extends Component {
   handleCheckboxChange = (id) => {
     this.state.hospitalUserPermissions.map((item) => {
         if (item.hospitalPermissionId === id) {
-            item.isChecked= !item.isChecked
+            item.isChecked = !item.isChecked
         }
     });
     this.setState({hospitalUserPermissions: this.state.hospitalUserPermissions.slice(0)});
   }
 
   handleDeleteConfirmation = (isActive) => {
-    this.changeErrorMessage('');
+    this.changeErrorMessage(Constants.EMPTY_STRING);
     this.setState({isDeleteDialogActive:isActive});
   }
 
   handleDeleteConfirmationYes = () => {
-    Api.deleteRequest(`/api/hospitalAccount?hospitalUserId=${this.state.hospitalUserId}`)
+    Api.deleteRequest(`${Constants.HOSPITAL_ACCOUNT_API_PATH}?hospitalUserId=${this.state.hospitalUserId}`)
         .then((res) => {
           Api.setToken(res.headers.authorization);
           this.handleDeleteConfirmation(false);
-          this.props.hideDialog(); 
+          this.props.hideDialog();
+          this.props.handleSearch(1);
         })
         .catch((error) => {
           if (error.response) {
-            if (error.response.status === 401) {
-              sessionStorage.clear();
-              this.props.history.push('/');
+            if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
+              Logout.bind(this)();
             } else {
               this.handleDeleteConfirmation(false);
               this.changeErrorMessage(error.response.data);
@@ -78,7 +81,7 @@ class HospitalAccountEditor extends Component {
   }
 
   handleSaveConfirmation = (isActive) => {
-    this.changeErrorMessage('');
+    this.changeErrorMessage(Constants.EMPTY_STRING);
     this.setState({isSaveDialogActive:isActive});
   }
 
@@ -89,9 +92,9 @@ class HospitalAccountEditor extends Component {
         hospitalPermissionIds.push(item.hospitalPermissionId);
       }
     });
-    if (this.props.isEditMode) {
+    this.props.isEditMode ? 
       Api.putRequest(
-        '/api/hospitalAccount', 
+        Constants.HOSPITAL_ACCOUNT_API_PATH, 
         {
           hospitalId: this.state.hospitalId,
           hospitalCode: this.state.hospitalCode,
@@ -103,25 +106,10 @@ class HospitalAccountEditor extends Component {
           hospitalUserId: this.state.hospitalUserId,
           hospitalPermissionIds: hospitalPermissionIds
         })
-        .then((res) => {
-          Api.setToken(res.headers.authorization);
-          this.handleSaveConfirmation(false);
-          this.props.hideDialog(); 
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === 401) {
-              sessionStorage.clear();
-              this.props.history.push('/');
-            } else {
-              this.handleSaveConfirmation(false);
-              this.changeErrorMessage(error.response.data);
-            }
-          }
-      });
-    } else {
-      Api.postRequest(
-        '/api/hospitalAccount', 
+        .then(res => this.handleSaveSuccess(res))
+        .catch(err => this.handleSaveError(err))
+    : Api.postRequest(
+        Constants.HOSPITAL_ACCOUNT_API_PATH, 
         {
           hospitalCode: this.state.hospitalCode,
           hospitalName: this.state.hospitalName,
@@ -131,22 +119,25 @@ class HospitalAccountEditor extends Component {
           password: this.state.password,
           hospitalPermissionIds: hospitalPermissionIds
         })
-        .then((res) => {
-          Api.setToken(res.headers.authorization);
-          this.handleSaveConfirmation(false);
-          this.props.hideDialog(); 
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === 401) {
-              sessionStorage.clear();
-              this.props.history.push('/');
-            } else {
-              this.handleSaveConfirmation(false);
-              this.changeErrorMessage(error.response.data);
-            }
-          }
-      });
+        .then(res => this.handleSaveSuccess(res))
+        .catch(err => this.handleSaveError(err));
+  }
+
+  handleSaveSuccess = (res) => {
+    Api.setToken(res.headers.authorization);
+    this.handleSaveConfirmation(false);
+    this.props.hideDialog();
+    this.props.handleSearch(1);
+  }
+
+  handleSaveError = (error) => {
+    if (error.response) {
+      if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
+        Logout.bind(this)();
+      } else {
+        this.handleSaveConfirmation(false);
+        this.changeErrorMessage(error.response.data);
+      }
     }
   }
 
@@ -155,43 +146,43 @@ class HospitalAccountEditor extends Component {
   }
 
   handleCancel = () => {
-    this.changeErrorMessage('');
+    this.changeErrorMessage(Constants.EMPTY_STRING);
     this.props.hideDialog();
   }
 
   render ()  {
     return (
         <Dialog theme={theme} active={this.props.isActive}>
-            <div className={HospitalCss.errorMessage}>{this.state.errorMessage}</div>
-            <table className={HospitalCss.htable} align="center">
+            <div className={EditCss.errorMessage}>{this.state.errorMessage}</div>
+            <table className={EditCss.htable} align="center">
               <tbody>
                 <tr>
                   <td>■ 医療機関ID</td>
-                  <td>{this.props.isEditMode ? this.state.hospitalId : ''}</td>    
+                  <td>{this.props.isEditMode ? this.state.hospitalId : Constants.EMPTY_STRING}</td>    
                 </tr>
                 <tr>
                   <td>■ 医療機関コード</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.hospitalCode} onChange={this.handleChange.bind(this, 'hospitalCode')} /></td> 
+                  <td><input type="text" className={EditCss.text} value={this.state.hospitalCode} onChange={this.handleChange.bind(this, 'hospitalCode')} /></td> 
                 </tr>
                 <tr>
                   <td>■ 医療機関名</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.hospitalName} onChange={this.handleChange.bind(this, 'hospitalName')} /></td>    
+                  <td><input type="text" className={EditCss.text} value={this.state.hospitalName} onChange={this.handleChange.bind(this, 'hospitalName')} /></td>    
                 </tr>
                 <tr>
                   <td>■ 管轄自治体コード</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /></td>    
+                  <td><input type="text" className={EditCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /></td>    
                 </tr>
                 <tr>
                   <td>■ アカウント名</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this,'displayName')}/></td>    
+                  <td><input type="text" className={EditCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this,'displayName')}/></td>    
                 </tr>
                 <tr>
                   <td>■ ログインID</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this,'mailAddress')}/></td>    
+                  <td><input type="text" className={EditCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this,'mailAddress')}/></td>    
                 </tr>
                 <tr>
                   <td>■ パスワード</td>
-                  <td><input type="password" className={HospitalCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/></td>
+                  <td><input type="password" className={EditCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/></td>
                 </tr>
                 <tr>
                   <td>■ 権限</td>
@@ -214,7 +205,7 @@ class HospitalAccountEditor extends Component {
                      {
                       this.props.isEditMode 
                         ? <input type="button" value="削除" id="deleteId" onClick={this.handleDeleteConfirmation.bind(this, true)}/> 
-                        : ''
+                        : Constants.EMPTY_STRING
                       }
                   </td>
                   <td>
@@ -238,4 +229,4 @@ class HospitalAccountEditor extends Component {
   }
 }
 
-export default HospitalAccountEditor;
+export default withRouter(HospitalAccountEditor);

@@ -3,53 +3,46 @@ import Manager from '../../css/main.css';
 import HospitalAccountManagement from './HospitalAccountManagement';
 import LocalityAccountManagement from './LocalityAccountManagement';
 import {Route, withRouter} from 'react-router-dom';
+import Logout from '../function/Logout';
+import GetLoginUserName from '../function/getLoginUserName';
+import * as Constants from '../../common/Constants';
 
-const BTN_BG_COLOR = 'btn_background_color';
-
-class Main extends Component{
-	constructor(props){
+class Main extends Component {
+	constructor(props) {
 		super(props);
-		this.state={
-			isDialogActive:false,
-			hostipalBtnBgColor:BTN_BG_COLOR,
-			userName: null,
-			cityBtnBgColor:''
+		this.state = {
+			isDialogActive: false,
+			hostipalBtnBgColor: Constants.BTN_BG_COLOR,
+			cityBtnBgColor: Constants.EMPTY_STRING
 		}
 	}
  
  	componentDidMount = () => {
- 		let userName = sessionStorage.getItem('userName');
- 		if (userName) {
- 			this.setState({userName: userName});
+ 		if (GetLoginUserName()) {
  			this.props.history.push('/index/hospitalAccount');
  		} else {
- 			this.logout();
+ 			Logout.bind(this)();
  		}
  	}
 
  	handleHospitalBtnClick = () => {
- 		if (this.state.hostipalBtnBgColor !== BTN_BG_COLOR){
+ 		if (this.state.hostipalBtnBgColor !== Constants.BTN_BG_COLOR){
  			this.setState({
- 				hostipalBtnBgColor:BTN_BG_COLOR,
- 				cityBtnBgColor:''
+ 				hostipalBtnBgColor:Constants.BTN_BG_COLOR,
+ 				cityBtnBgColor:Constants.EMPTY_STRING
  			},
  			() => this.props.history.push('/index/hospitalAccount'));
  		}
  	}
 
  	handleCityBtnClick = () => {
- 		if (this.state.cityBtnBgColor !== BTN_BG_COLOR){
+ 		if (this.state.cityBtnBgColor !== Constants.BTN_BG_COLOR){
  			this.setState({
- 				hostipalBtnBgColor:'',
- 				cityBtnBgColor:BTN_BG_COLOR
+ 				hostipalBtnBgColor:Constants.EMPTY_STRING,
+ 				cityBtnBgColor:Constants.BTN_BG_COLOR
  			},
- 			() => this.props.history.push('/index/cityAccount'));
+ 			() => this.props.history.push('/index/localityAccount'));
  		}
- 	}
-
- 	logout = () => {
- 		sessionStorage.clear();
- 		this.props.history.push('/');
  	}
 
 	render() {
@@ -59,8 +52,8 @@ class Main extends Component{
 		            <div className={Manager.l_f}><span>予防接種管理システム</span></div>
 		            <div className={Manager.r_f}>
 		              <button type="button" className={Manager.btn_setup} >設定</button>
-		              <button type="button" className={Manager.btn_logout} onClick={this.logout}>ログアウト</button>
-		              <span className={Manager.loginUser}>{ this.state.userName }</span>
+		              <button type="button" className={Manager.btn_logout} onClick={Logout.bind(this)}>ログアウト</button>
+		              <span className={Manager.loginUser}>{GetLoginUserName()}</span>
 		            </div>
 	         	</div>
 	         	<div className={Manager.emptyArea} />
@@ -72,7 +65,7 @@ class Main extends Component{
 				</div>
 				<div className={Manager.content}>
 					<Route path='/index/hospitalAccount' component={HospitalAccountManagement} />
-					<Route path='/index/cityAccount' component={LocalityAccountManagement} />
+					<Route path='/index/localityAccount' component={LocalityAccountManagement} />
 				</div>
 			</div>
 		);
