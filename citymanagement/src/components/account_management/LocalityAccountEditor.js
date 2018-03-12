@@ -37,13 +37,6 @@ class LocalityAccountEditor extends Component {
 		})
 	}
 
-	// handleChangeText = () =>{
-	// 	this.setState({
-	// 		accountName:this.refs.accountNameText.value,
-	// 		passWord:this.refs.passWordText.value,
-	// 	})
-	// }
-
 	handleChange = (name, event) => {
 		this.setState({[name]: event.target.value})
 	}
@@ -88,7 +81,6 @@ class LocalityAccountEditor extends Component {
   	}
 
   	handleSaveConfirmationYes = () =>{
-	    // todo save to db  
 	    const localityPermissionIds = [];
 	    this.state.localityUserPermissions.map(item => {
 	    	if(item.isChecked) {
@@ -152,8 +144,6 @@ class LocalityAccountEditor extends Component {
 		      });
 	    }
   	}
-
-
 
   	changeErrorMessage = (message) => {
     this.setState({errorMessage: message});

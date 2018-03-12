@@ -22,7 +22,6 @@ class LocalityAccountManagement extends Component {
 			localityAccounts:[],
 			localityPermissions:[],
 			selectlocalityAccounts:EMPTY_ACCOUNT,
-			selectCityAccounts:{cityName:'',cityId:'',cityCode:'',managerId:''},
 			searchCondition:'',
 			isEdit:false,
 			pageSize:5,
