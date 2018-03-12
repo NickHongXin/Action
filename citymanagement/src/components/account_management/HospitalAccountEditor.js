@@ -32,7 +32,7 @@ class HospitalAccountEditor extends Component {
       hospitalCode:nextProps.accountInfo.hospitalCode,
       localityCode:nextProps.accountInfo.localityCode,
       displayName:nextProps.accountInfo.displayName,
-      mailAddress:nextProps.accountInfo.mailAddress,
+      mailAddress:nextProps.accountInfo.loginUserId,
       password: '123456',
       hospitalUserId: nextProps.accountInfo.hospitalUserId,
       hospitalUserPermissions:nextProps.accountInfo.hospitalUserPermissions
