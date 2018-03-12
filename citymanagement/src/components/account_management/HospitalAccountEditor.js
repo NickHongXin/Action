@@ -61,7 +61,10 @@ class HospitalAccountEditor extends Component {
   }
 
   handleDeleteConfirmationYes = () => {
-    Api.deleteRequest(`${Constants.HOSPITAL_ACCOUNT_API_PATH}?hospitalUserId=${this.state.hospitalUserId}`)
+    Api.deleteRequest(Constants.HOSPITAL_ACCOUNT_API_PATH,
+        {
+          hospitalUserId: this.state.hospitalUserId
+        })
         .then((res) => {
           Api.setToken(res.headers.authorization);
           this.handleDeleteConfirmation(false);
