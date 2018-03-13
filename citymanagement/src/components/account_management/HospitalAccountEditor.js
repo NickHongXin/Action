@@ -21,8 +21,87 @@ class HospitalAccountEditor extends Component {
       password:'123456',
       hospitalUserId:0,
       hospitalUserPermissions:[],
-      errorMessage:''
+      errorMessage:'',
+      hospitalNameValid:'',
+      hospitalIdValid:'',
+      hospitalCodeValid:'',
+      localityCodeValid:'',
+      displayNameValid:'',
+      mailAddressValid:'',
+      passwordValid:'',
+
     }
+  }
+  handleClick()
+  {
+     let errorExit = false;
+       if(this.state.hospitalCode === ""||this.state.hospitalCode === null)
+       {
+            this.setState
+            ({
+                hospitalCodeValid: "hospitalCode不能为空"
+            })
+           errorExit = true; 
+       }else if(this.state. hospitalName === ""||this.state.hospitalName === null)
+       {
+            this.setState({
+                hospitalCodeValid: "",
+                hospitalNameValid: " hospitalName不能为空",
+            })
+             errorExit = true;
+        }else if(this.state. localityCode === ""||this.state.localityCode === null)
+       {
+            this.setState({
+                hospitalCodeValid: "",
+                hospitalNameValid: "",
+                localityCodeValid:"localityCode不能为空",
+            })
+             errorExit = true;
+        }
+        else if(this.state. displayName === ""||this.state.displayName === null)
+       {
+            this.setState({
+                hospitalCodeValid: "",
+                hospitalNameValid: "",
+                localityCodeValid:"",
+                displayNameValid:"displayName不能为空"
+            })
+             errorExit = true;
+        }
+      
+        else if(this.state.mailAddress === ""||this.state.mailAddress === null)
+       {
+            this.setState({
+                hospitalCodeValid: "",
+                hospitalNameValid: "",
+                localityCodeValid:" ",
+                displayNameValid:" ",
+                mailAddressValid:"mailAddress不能为空"
+            })
+             errorExit = true;
+        }else if(this.state. password === ""||this.state.password === null)
+       {
+            this.setState({
+                hospitalCodeValid: "",
+                hospitalNameValid: "",
+                localityCodeValid:" ",
+                displayNameValid:" ",
+                mailAddressValid:" ",
+                passwordValid:"password 不能为空",
+            })
+             errorExit = true;
+        }else
+        {
+            this.setState({ //清除help-block提示文字
+                 hospitalCodeValid: "",
+                 hospitalNameValid: "",
+                 localityCodeValid:"",
+                 displayNameValid:"",
+                 mailAddressValid:"",
+                 passwordValid:"",
+            });
+          }
+          return errorExit;
   }
 
   componentWillReceiveProps = (nextProps) => {
@@ -41,6 +120,37 @@ class HospitalAccountEditor extends Component {
 
   handleChange = (name, event) => {
     this.setState({[name]: event.target.value});
+    if(event.target.value !=''&&event.target.value !=null){
+          if(name==='hospitalCode')
+          {
+            this.setState({ hospitalCodeValid: ""});
+          }
+          if(name==='hospitalName')
+          {
+            this.setState({ hospitalNameValid: ""});
+          }
+          if(name==='localityCode')
+          {
+             this.setState({ localityCodeValid: ""});
+          }
+           if(name==='displayName')
+          {
+            this.setState({ displayNameValid: ""});
+          }
+          if(name==='mailAddress')
+          {
+          if(!this.state.mailAddress.match(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/i))
+            {
+             this.setState({mailAddressValid: 'ログインID不合法。'});
+            }else{
+                    this.setState({mailAddressValid:''});
+                }
+          }
+          if(name==='password')
+          {
+            this.setState({passwordValid:''});
+          }
+        }
   }
 
   handleCheckboxChange = (id) => {
@@ -79,6 +189,10 @@ class HospitalAccountEditor extends Component {
 
   handleSaveConfirmation = (isActive) => {
     this.changeErrorMessage('');
+    if(this.handleClick())
+    {
+      return false;
+    }
     this.setState({isSaveDialogActive:isActive});
   }
 
@@ -173,26 +287,41 @@ class HospitalAccountEditor extends Component {
                   <td>■ 医療機関コード</td>
                   <td><input type="text" className={HospitalCss.text} value={this.state.hospitalCode} onChange={this.handleChange.bind(this, 'hospitalCode')} /></td> 
                 </tr>
+                <span>{this.state.hospitalCodeValid}</span>
+                
                 <tr>
                   <td>■ 医療機関名</td>
                   <td><input type="text" className={HospitalCss.text} value={this.state.hospitalName} onChange={this.handleChange.bind(this, 'hospitalName')} /></td>    
                 </tr>
+                <span>{this.state.hospitalNameValid}</span>
+              
                 <tr>
                   <td>■ 管轄自治体コード</td>
                   <td><input type="text" className={HospitalCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /></td>    
                 </tr>
+                 <span>{this.state.localityCodeValid}</span>
+
+
                 <tr>
                   <td>■ アカウント名</td>
                   <td><input type="text" className={HospitalCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this,'displayName')}/></td>    
                 </tr>
+                <span>{this.state.displayNameValid}</span>
+
+
                 <tr>
                   <td>■ ログインID</td>
                   <td><input type="text" className={HospitalCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this,'mailAddress')}/></td>    
                 </tr>
+                <span>{this.state.mailAddressValid}</span>
+
                 <tr>
                   <td>■ パスワード</td>
                   <td><input type="password" className={HospitalCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/></td>
                 </tr>
+               <span>{this.state.passwordValid}</span>
+
+
                 <tr>
                   <td>■ 権限</td>
                   <td>
@@ -218,8 +347,10 @@ class HospitalAccountEditor extends Component {
                       }
                   </td>
                   <td>
+                      
                       <input type="button" value="完了" onClick={this.handleSaveConfirmation.bind(this, true)} />
                       <input type="button" value="キャンセル" onClick={this.handleCancel} />
+                       
                   </td>
                 </tr>
               </tbody>
@@ -237,5 +368,6 @@ class HospitalAccountEditor extends Component {
     );
   }
 }
+
 
 export default HospitalAccountEditor;
