@@ -67,6 +67,9 @@ class LocalityAccountEditor extends Component {
 	            if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
 	              Logout.bind(this)();
 	            } else {
+        		  if (error.response.headers && error.response.headers.authorization) {
+					Api.setToken(error.response.headers.authorization)
+	  			  }
 	              this.handleDeleteConfirmation(false);
 	              this.changeErrorMessage(error.response.data);
 	            }
@@ -126,10 +129,14 @@ class LocalityAccountEditor extends Component {
   	}
 
  	handleSaveError = (error) => {
+ 		console.log(error.response.headers.authorization)
 	    if (error.response) {
 	      if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
 	        Logout.bind(this)();
 	      } else {
+	      	if (error.response.headers && error.response.headers.authorization) {
+				Api.setToken(error.response.headers.authorization)
+		  	}
 	        this.handleSaveConfirmation(false);
 	        this.changeErrorMessage(error.response.data);
 	      }

@@ -82,8 +82,14 @@ class LocalityAccountManagement extends Component {
 				Api.setToken(res.headers.authorization);
 			})
 			.catch(error => {
-				if (error.response && error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
-			        Logout.bind(this)();
+				if (error.response) {
+					if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
+			        	Logout.bind(this)();
+			    	} else {
+			    		if (error.response.headers && error.response.headers.authorization) {
+			            	Api.setToken(error.response.headers.authorization)
+			          	}
+			    	}
 		      	}
 			});
   	}
