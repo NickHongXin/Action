@@ -25,7 +25,7 @@ class HospitalAccountEditor extends Component {
       password: Constants.EMPTY_STRING,
       hospitalUserId: 0,
       hospitalUserPermissions: []
-    }
+    };
   }
 
   componentWillReceiveProps = (nextProps) => {

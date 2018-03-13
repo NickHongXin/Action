@@ -24,7 +24,7 @@ class LocalityAccountEditor extends Component {
 		    password: Constants.EMPTY_STRING,
 		    localityUserId: 0,
 		    localityUserPermissions: []
-	    }
+	    };
 	}
 
 	componentWillReceiveProps = (nextProps) =>{

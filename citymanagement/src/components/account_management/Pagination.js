@@ -11,7 +11,7 @@ class Pagination extends Component {
 			leftLinkDisable: Constants.EMPTY_STRING,
 			rightLinkDisable: Constants.EMPTY_STRING,
 			textlinkDisable: Constants.EMPTY_STRING
-		}
+		};
 	}
 
 	componentWillReceiveProps = (nextProps) => {

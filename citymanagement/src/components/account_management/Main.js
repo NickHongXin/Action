@@ -14,7 +14,7 @@ class Main extends Component {
 			isDialogActive: false,
 			hostipalBtnBgColor: Constants.BTN_BG_COLOR,
 			cityBtnBgColor: Constants.EMPTY_STRING
-		}
+		};
 	}
  
  	componentDidMount = () => {
