@@ -6,6 +6,15 @@
 .htable>tbody>tr>td{
     height: 60px;
     border:none;
+    vertical-align: top;
+}
+
+.htable>tbody>tr>td:first-of-type{
+    width: 42%;
+}
+
+.htable>tbody>tr>td:last-of-type{
+    width: 58%;
 }
 
 input[type="button"]{
@@ -32,9 +41,10 @@ input[type="button"]{
 }
 
 .errorMessage {
-    font-size: 15px;
+    font-size: 14px;
     color:red;
     height: 15px;
     width: 100%;
+    font-weight: normal;
 }
 

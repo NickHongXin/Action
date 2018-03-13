@@ -8,6 +8,7 @@ import * as Constants from '../../common/Constants';
 import Logout from '../function/Logout';
 import * as Api from '../../common/ApiCaller';
 import {withRouter} from 'react-router-dom';
+import * as Validations from '../function/Validate';
 
 class LocalityAccountEditor extends Component {
 	constructor(props) {
@@ -19,28 +20,20 @@ class LocalityAccountEditor extends Component {
 		    localityId: 0,
 		    localityCode: Constants.EMPTY_STRING,
 		    displayName: Constants.EMPTY_STRING,
-		    mailAddress: Constants.EMPTY_STRING,
+		    loginUserId: Constants.EMPTY_STRING,
 		    password: Constants.EMPTY_STRING,
 		    localityUserId: 0,
-		    localityUserPermissions: [],
-		    errorMessage: Constants.EMPTY_STRING
+		    localityUserPermissions: []
 	    }
 	}
 
 	componentWillReceiveProps = (nextProps) =>{
-		this.setState({
-			localityName: nextProps.accountInfo.localityName,
-	      	localityId: nextProps.accountInfo.localityId,
-	      	localityCode: nextProps.accountInfo.localityCode,
-	      	displayName: nextProps.accountInfo.displayName,
-	      	mailAddress: nextProps.accountInfo.loginUserId,
-	      	password: Constants.DEFAULT_PASSWORD,
-	      	localityUserId: nextProps.accountInfo.localityUserId,
-	      	localityUserPermissions: nextProps.accountInfo.localityUserPermissions
-		});
+		this.setState(Object.assign({}, nextProps.accountInfo));
 	}
 
 	handleChange = (name, event) => {
+		this.changeErrorMessage(Constants.EMPTY_STRING);
+		Validations.clearError.bind(this, name)();
 		this.setState({[name]: event.target.value});
 	}
 
@@ -55,7 +48,7 @@ class LocalityAccountEditor extends Component {
 
   	handleDeleteConfirmation = (isActive) => {
   		this.changeErrorMessage(Constants.EMPTY_STRING);
-	    this.setState({isDeleteDialogActive:isActive});
+	    this.setState({isDeleteDialogActive: isActive});
   	}
 
   	handleDeleteConfirmationYes = () => {
@@ -66,7 +59,7 @@ class LocalityAccountEditor extends Component {
 	        .then((res) => {
 	          Api.setToken(res.headers.authorization);
 	          this.handleDeleteConfirmation(false);
-	          this.props.hideDialog();
+	          this.props.hideDialog(false);
 	          this.props.handleSearch(1);
 	        })
 	        .catch((error) => {
@@ -82,6 +75,9 @@ class LocalityAccountEditor extends Component {
   	}
 
 	handleSaveConfirmation = (isActive) => {
+		if (this.handleValidate()) {
+	      return;
+	    }
 		this.changeErrorMessage(Constants.EMPTY_STRING);
 	    this.setState({isSaveDialogActive: isActive});
   	}
@@ -101,7 +97,7 @@ class LocalityAccountEditor extends Component {
 	          localityCode: this.state.localityCode,
 	          localityName: this.state.localityName,
 	          displayName: this.state.displayName,
-	          mailAddress: this.state.mailAddress,
+	          mailAddress: this.state.loginUserId,
 	          password: this.state.password,
 	          localityUserId: this.state.localityUserId,
 	          localityPermissionIds: localityPermissionIds
@@ -114,7 +110,7 @@ class LocalityAccountEditor extends Component {
 	          localityCode: this.state.localityCode,
 	          localityName: this.state.localityName,
 	          displayName: this.state.displayName,
-	          mailAddress: this.state.mailAddress,
+	          mailAddress: this.state.loginUserId,
 	          password: this.state.password,
 	          localityPermissionIds: localityPermissionIds
 	        })
@@ -125,7 +121,7 @@ class LocalityAccountEditor extends Component {
   	handleSaveSuccess = (res) => {
 	    Api.setToken(res.headers.authorization);
 	    this.handleSaveConfirmation(false);
-	    this.props.hideDialog();
+	    this.props.hideDialog(false);
 	    this.props.handleSearch(1);
   	}
 
@@ -141,18 +137,27 @@ class LocalityAccountEditor extends Component {
   	}
 
   	changeErrorMessage = (message) => {
-	    this.setState({errorMessage: message});
+	    this.setState({apiError: message});
   	}
 
   	handleCancel = () => {
+  		Validations.clearError.bind(this, 'all')();
 	    this.changeErrorMessage(Constants.EMPTY_STRING);
-	    this.props.hideDialog();
+	    this.props.hideDialog(false);
   	}
+
+  	handleValidate = () => {
+    return Validations.isEmpty.bind(this, 'localityCode', this.state.localityCode)()
+      | Validations.isEmpty.bind(this, 'localityName', this.state.localityName)()
+      | Validations.isEmpty.bind(this, 'displayName', this.state.displayName)()
+      | Validations.isEmpty.bind(this, 'loginUserId', this.state.loginUserId)()
+      | Validations.isEmpty.bind(this, 'password', this.state.password)() ? true : false;
+  }
 
   	render(){ 		
     	return (
-	        <Dialog theme={theme} active={this.props.isActive} onOverlayClick={this.props.hideDialog} onEscKeyDown={this.props.hideDialog}>
-	            <div className={EditCss.errorMessage}>{this.state.errorMessage}</div>
+	        <Dialog theme={theme} active={this.props.isActive}>
+	            <div className={EditCss.errorMessage}>{this.state.apiError}</div>
 	            <table className={EditCss.htable} align="center">
 	              <tbody>
 	                <tr>
@@ -163,23 +168,38 @@ class LocalityAccountEditor extends Component {
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体コード</td>
-	                    <td><input type="text" className={EditCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /></td> 
+	                    <td>
+	                    	<input type="text" className={EditCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} />
+	                    	<br /><span className={EditCss.errorMessage}>{this.state.localityCodeError}</span>
+                    	</td>
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体名</td>
-	                    <td><input type="text" className={EditCss.text} value={this.state.localityName} onChange={this.handleChange.bind(this, 'localityName')} /></td>    
+	                    <td>
+	                    	<input type="text" className={EditCss.text} value={this.state.localityName} onChange={this.handleChange.bind(this, 'localityName')} />
+	                    	<br /><span className={EditCss.errorMessage}>{this.state.localityNameError}</span>
+                    	</td>
 	                </tr>
 	                <tr>
 	                    <td>■ アカウント名</td>
-	                    <td><input type="text" className={EditCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this, 'displayName')} /></td>
+	                    <td>
+	                    	<input type="text" className={EditCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this, 'displayName')} />
+	                    	<br /><span className={EditCss.errorMessage}>{this.state.displayNameError}</span>
+                    	</td>
 	                </tr>
 	                <tr>
 	                    <td>■ ログインID</td>
-	                    <td><input type="text" className={EditCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this, 'mailAddress')} /></td>    
+	                    <td>
+	                    	<input type="text" className={EditCss.text} value={this.state.loginUserId} onChange={this.handleChange.bind(this, 'loginUserId')} />
+	                    	<br /><span className={EditCss.errorMessage}>{this.state.mailAddressError}</span>
+                    	</td>
 	                </tr>
 	                <tr>
 	                    <td>■ パスワード</td>
-	                    <td><input type="password" className={EditCss.text} value={this.state.password} onChange={this.handleChange.bind(this, 'password')}/></td>
+	                    <td>
+	                    	<input type="text" className={EditCss.text} value={this.state.password} onChange={this.handleChange.bind(this, 'password')}/>
+	                    	<br /><span className={EditCss.errorMessage}>{this.state.passwordError}</span>
+                    	</td>
 	                </tr>
 	                <tr>
 	                    <td>■ 権限</td>

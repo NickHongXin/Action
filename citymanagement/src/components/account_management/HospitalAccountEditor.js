@@ -8,6 +8,7 @@ import * as Api from '../../common/ApiCaller';
 import * as Constants from '../../common/Constants';
 import Logout from '../function/Logout';
 import {withRouter} from 'react-router-dom';
+import * as Validations from '../function/Validate';
 
 class HospitalAccountEditor extends Component {
   constructor(props) {
@@ -23,26 +24,17 @@ class HospitalAccountEditor extends Component {
       mailAddress: Constants.EMPTY_STRING,
       password: Constants.EMPTY_STRING,
       hospitalUserId: 0,
-      hospitalUserPermissions: [],
-      errorMessage: Constants.EMPTY_STRING
+      hospitalUserPermissions: []
     }
   }
 
   componentWillReceiveProps = (nextProps) => {
-    this.setState({
-      hospitalName: nextProps.accountInfo.hospitalName,
-      hospitalId: nextProps.accountInfo.hospitalId,
-      hospitalCode: nextProps.accountInfo.hospitalCode,
-      localityCode: nextProps.accountInfo.localityCode,
-      displayName: nextProps.accountInfo.displayName,
-      mailAddress: nextProps.accountInfo.mailAddress,
-      password: Constants.DEFAULT_PASSWORD,
-      hospitalUserId: nextProps.accountInfo.hospitalUserId,
-      hospitalUserPermissions: nextProps.accountInfo.hospitalUserPermissions
-    });
+    this.setState(Object.assign({}, nextProps.accountInfo));
   }
 
   handleChange = (name, event) => {
+    this.changeErrorMessage(Constants.EMPTY_STRING);
+    Validations.clearError.bind(this, name)();
     this.setState({[name]: event.target.value});
   }
 
@@ -68,7 +60,7 @@ class HospitalAccountEditor extends Component {
         .then((res) => {
           Api.setToken(res.headers.authorization);
           this.handleDeleteConfirmation(false);
-          this.props.hideDialog();
+          this.props.hideDialog(false);
           this.props.handleSearch(1);
         })
         .catch((error) => {
@@ -84,6 +76,9 @@ class HospitalAccountEditor extends Component {
   }
 
   handleSaveConfirmation = (isActive) => {
+    if (this.handleValidate()) {
+      return;
+    }
     this.changeErrorMessage(Constants.EMPTY_STRING);
     this.setState({isSaveDialogActive:isActive});
   }
@@ -129,7 +124,7 @@ class HospitalAccountEditor extends Component {
   handleSaveSuccess = (res) => {
     Api.setToken(res.headers.authorization);
     this.handleSaveConfirmation(false);
-    this.props.hideDialog();
+    this.props.hideDialog(false);
     this.props.handleSearch(1);
   }
 
@@ -145,18 +140,28 @@ class HospitalAccountEditor extends Component {
   }
 
   changeErrorMessage = (message) => {
-    this.setState({errorMessage: message});
+    this.setState({apiError: message});
   }
 
   handleCancel = () => {
+    Validations.clearError.bind(this, 'all')();
     this.changeErrorMessage(Constants.EMPTY_STRING);
-    this.props.hideDialog();
+    this.props.hideDialog(false);
+  }
+
+  handleValidate = () => {
+    return Validations.isEmpty.bind(this, 'hospitalCode', this.state.hospitalCode)()
+      | Validations.isEmpty.bind(this, 'hospitalName', this.state.hospitalName)()
+      | Validations.isEmpty.bind(this, 'localityCode', this.state.localityCode)()
+      | Validations.isEmpty.bind(this, 'displayName', this.state.displayName)()
+      | Validations.isEmpty.bind(this, 'mailAddress', this.state.mailAddress)()
+      | Validations.isEmpty.bind(this, 'password', this.state.password)() ? true : false;
   }
 
   render ()  {
     return (
         <Dialog theme={theme} active={this.props.isActive}>
-            <div className={EditCss.errorMessage}>{this.state.errorMessage}</div>
+            <div className={EditCss.errorMessage}>{this.state.apiError}</div>
             <table className={EditCss.htable} align="center">
               <tbody>
                 <tr>
@@ -165,27 +170,45 @@ class HospitalAccountEditor extends Component {
                 </tr>
                 <tr>
                   <td>■ 医療機関コード</td>
-                  <td><input type="text" className={EditCss.text} value={this.state.hospitalCode} onChange={this.handleChange.bind(this, 'hospitalCode')} /></td> 
+                  <td>
+                    <input type="text" className={EditCss.text} value={this.state.hospitalCode} onChange={this.handleChange.bind(this, 'hospitalCode')} />
+                    <br /><span className={EditCss.errorMessage}>{this.state.hospitalCodeError}</span>
+                  </td> 
                 </tr>
                 <tr>
                   <td>■ 医療機関名</td>
-                  <td><input type="text" className={EditCss.text} value={this.state.hospitalName} onChange={this.handleChange.bind(this, 'hospitalName')} /></td>    
+                  <td>
+                    <input type="text" className={EditCss.text} value={this.state.hospitalName} onChange={this.handleChange.bind(this, 'hospitalName')} />
+                    <br /><span className={EditCss.errorMessage}>{this.state.hospitalNameError}</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>■ 管轄自治体コード</td>
-                  <td><input type="text" className={EditCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /></td>    
+                  <td>
+                    <input type="text" className={EditCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} />
+                    <br /><span className={EditCss.errorMessage}>{this.state.localityCodeError}</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>■ アカウント名</td>
-                  <td><input type="text" className={EditCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this,'displayName')}/></td>    
+                  <td>
+                    <input type="text" className={EditCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this,'displayName')}/>
+                    <br /><span className={EditCss.errorMessage}>{this.state.displayNameError}</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>■ ログインID</td>
-                  <td><input type="text" className={EditCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this,'mailAddress')}/></td>    
+                  <td>
+                    <input type="text" className={EditCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this,'mailAddress')}/>
+                    <br /><span className={EditCss.errorMessage}>{this.state.mailAddressError}</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>■ パスワード</td>
-                  <td><input type="password" className={EditCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/></td>
+                  <td>
+                    <input type="text" className={EditCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/>
+                    <br /><span className={EditCss.errorMessage}>{this.state.passwordError}</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>■ 権限</td>

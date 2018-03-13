@@ -23,6 +23,7 @@ export const EMPTY_HOSPITAL_ACCOUNT = {
 	localityCode: EMPTY_STRING,
 	displayName: EMPTY_STRING,
 	mailAddress: EMPTY_STRING,
+	password: DEFAULT_PASSWORD,
 	hospitalUserId: 0,
 	hospitalUserPermissions: []
 };
@@ -34,6 +35,7 @@ export const EMPTY_LOCALITY_ACCOUNT = {
 	localityId: 0,
 	localityCode: EMPTY_STRING,
 	loginUserId: EMPTY_STRING,
+	password: DEFAULT_PASSWORD,
 	displayName: EMPTY_STRING,
 	localityUserId: 0,
 	localityUserPermissions: []

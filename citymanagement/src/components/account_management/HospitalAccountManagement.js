@@ -21,8 +21,8 @@ class HospitalAccountManagement extends Component {
 		};
 	}
 
-	hideOrShowDialog = () => {
-	   this.setState({isDialogActive: !this.state.isDialogActive});
+	hideOrShowDialog = (isActive) => {
+	   this.setState({isDialogActive: isActive});
 	}
 
 	convert = (item) => {
@@ -46,18 +46,16 @@ class HospitalAccountManagement extends Component {
 
 	handleEdit =(item) => {
 		this.setState({
-			selectedAccount:this.convert(item),
-			isEdit:true
-		});
-		this.hideOrShowDialog();
+			selectedAccount: this.convert(item),
+			isEdit: true
+		}, () => this.hideOrShowDialog(true));
 	}
 	
 	handleCreate = () => {
 		this.setState({
-			selectedAccount:this.convert(Constants.EMPTY_HOSPITAL_ACCOUNT),
-			isEdit:false
-		});
-		this.hideOrShowDialog();	
+			selectedAccount: this.convert(Constants.EMPTY_HOSPITAL_ACCOUNT),
+			isEdit: false
+		}, () => this.hideOrShowDialog(true));
 	}
 
 	handleChange = (name, event) => {

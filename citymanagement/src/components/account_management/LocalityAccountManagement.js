@@ -25,11 +25,12 @@ class LocalityAccountManagement extends Component {
 		this.setState({searchCondition: this.refs.SearchCode.value});
 	}
 
-    hideOrShowDialog = () => {
-	    this.setState({isDialogActive: !this.state.isDialogActive});
+    hideOrShowDialog = (isActive) => {
+	    this.setState({isDialogActive: isActive});
   	}
 
   	convert = (item) => {
+
 		const localityUserPermissions = [];
 		this.state.localityPermissions.map(permission => {
 			let localityPermission = Object.assign({}, permission)
@@ -52,16 +53,14 @@ class LocalityAccountManagement extends Component {
   		this.setState({
             selectedAccount: this.convert(item),
             isEdit: true
-        });
-  		this.hideOrShowDialog();
+        }, () => this.hideOrShowDialog(true));
   	}
 
   	hideCreate = () => {
 		this.setState({
             selectedAccount: this.convert(Constants.EMPTY_LOCALITY_ACCOUNT),
             isEdit: false
-        });
-  		this.hideOrShowDialog();
+        }, () => this.hideOrShowDialog(true));
   	}
 
   	fetchLocalityAccounts = (currentPage) => {
