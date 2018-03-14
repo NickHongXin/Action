@@ -41,13 +41,14 @@ class HospitalAccountEditor extends Component {
   handleCheckboxChange = (id) => {
     this.state.hospitalUserPermissions.map((item) => {
         if (item.hospitalPermissionId === id) {
-            item.isChecked = !item.isChecked
+            item.isChecked = !item.isChecked;
         }
     });
     this.setState({hospitalUserPermissions: this.state.hospitalUserPermissions.slice(0)});
   }
 
   handleDeleteConfirmation = (isActive) => {
+    Validations.clearError.bind(this, 'all')();
     this.changeErrorMessage(Constants.EMPTY_STRING);
     this.setState({isDeleteDialogActive:isActive});
   }
@@ -69,7 +70,7 @@ class HospitalAccountEditor extends Component {
               Logout.bind(this)();
             } else {
               if (error.response.headers && error.response.headers.authorization) {
-                Api.setToken(error.response.headers.authorization)
+                Api.setToken(error.response.headers.authorization);
               }
               this.handleDeleteConfirmation(false);
               this.changeErrorMessage(error.response.data);
@@ -137,7 +138,7 @@ class HospitalAccountEditor extends Component {
         Logout.bind(this)();
       } else {
         if (error.response.headers && error.response.headers.authorization) {
-          Api.setToken(error.response.headers.authorization)
+          Api.setToken(error.response.headers.authorization);
         }
         this.handleSaveConfirmation(false);
         this.changeErrorMessage(error.response.data);

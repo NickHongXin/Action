@@ -28,7 +28,7 @@ class HospitalAccountManagement extends Component {
 	convert = (item) => {
 		const hospitalUserPermissions = [];
 		this.state.hospitalPermissions.map(permission => {
-			let hosiptalPermission = Object.assign({}, permission)
+			let hosiptalPermission = Object.assign({}, permission);
 			hosiptalPermission['isChecked'] = false;
 			if (item && item.hospitalUserPermissions){
 				item.hospitalUserPermissions.map(uPermission => {
@@ -86,7 +86,7 @@ class HospitalAccountManagement extends Component {
 			        	Logout.bind(this)();
 			    	} else {
 			    		if (error.response.headers && error.response.headers.authorization) {
-			            	Api.setToken(error.response.headers.authorization)
+			            	Api.setToken(error.response.headers.authorization);
 			          	}
 			    	}
 		      	}

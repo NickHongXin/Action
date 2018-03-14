@@ -30,10 +30,9 @@ class LocalityAccountManagement extends Component {
   	}
 
   	convert = (item) => {
-
 		const localityUserPermissions = [];
 		this.state.localityPermissions.map(permission => {
-			let localityPermission = Object.assign({}, permission)
+			let localityPermission = Object.assign({}, permission);
 			localityPermission['isChecked'] = false;
 			if (item && item.localityUserPermissions){
 				item.localityUserPermissions.map(uPermission => {
@@ -87,7 +86,7 @@ class LocalityAccountManagement extends Component {
 			        	Logout.bind(this)();
 			    	} else {
 			    		if (error.response.headers && error.response.headers.authorization) {
-			            	Api.setToken(error.response.headers.authorization)
+			            	Api.setToken(error.response.headers.authorization);
 			          	}
 			    	}
 		      	}
