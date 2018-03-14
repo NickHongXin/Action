@@ -21,7 +21,13 @@ class HospitalAccountEditor extends Component {
       password:'123456',
       hospitalUserId:0,
       hospitalUserPermissions:[],
-      errorMessage:''
+      errorMessage:'',
+      errorMessageHospitalName:'',
+      errorMessageHospitalCode:'',
+      errorMessageLocalityCode:'',
+      errorMessageDisplayName:'',
+      errorMessageMailAddress:'',
+      errorMessagePassword:''
     }
   }
 
@@ -41,6 +47,80 @@ class HospitalAccountEditor extends Component {
 
   handleChange = (name, event) => {
     this.setState({[name]: event.target.value});
+    if(event.target.value !== '' && event.target.value !== null){
+      switch(name) {
+        case 'hospitalCode' :
+          this.setState({errorMessageHospitalCode:''});
+          break;
+        case 'hospitalName' :
+          this.setState({errorMessagerHospitalName:''});
+          break;
+        case 'localityCode' :
+          this.setState({errorMessageLocalityCode:''});
+          break;
+        case 'displayName' :
+          this.setState({errorMessageDisplayName:''});
+          break;
+        case 'password' :
+          this.setState({errorMessagePassword:''});
+          break;
+        case 'mailAddress':
+          if(!this.state.mailAddress.match(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/i)){
+            this.setState({errorMessageMailAddress: '電子メールでなければなりません'});
+          }else{
+            this.setState({errorMessageMailAddress:''});
+          }
+          break;
+        default :
+          break;
+      }
+    }
+  }
+
+  handleCheckTextValue = () => {
+    let isHasError = false;
+    if(this.state.hospitalCode === '' || this.state.hospitalCode === null){
+      this.setState({errorMessageHospitalCode:'医療機関コード は空です'});
+      isHasError = true;
+    }else{
+      this.setState({errorMessageHospitalCode:''});
+    }
+    if(this.state.hospitalName === '' || this.state.hospitalName === null){
+      this.setState({errorMessagerHospitalName:'医療機関名 は空です'});
+      isHasError = true;
+    }else{
+      this.setState({errorMessagerHospitalName:''});
+    }
+    if(this.state.localityCode === '' || this.state.localityCode === null){
+      this.setState({errorMessageLocalityCode:'管轄自治体コード は空です'});
+      isHasError = true;
+    }else{
+      this.setState({errorMessageLocalityCode:''});
+    }
+    if(this.state.displayName === '' || this.state.displayName === null){
+      this.setState({errorMessageDisplayName:'アカウント名 は空です'});
+      isHasError = true;
+    }else{
+      this.setState({errorMessageDisplayName:''});
+    }
+    if(this.state.mailAddress === '' || this.state.mailAddress === null){
+      this.setState({errorMessageMailAddress:'ログインID は空です'});
+      isHasError = true;
+    }else{
+      if(!this.state.mailAddress.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
+        this.setState({errorMessageMailAddress:'電子メールでなければなりません'});
+        isHasError= true;
+      }else{
+        this.setState({errorMessageMailAddress:''});
+      }
+    }
+    if(this.state.password === '' || this.state.password === null){
+      this.setState({errorMessagePassword:'パスワード は空です'});
+      isHasError = true;
+    }else{
+      this.setState({errorMessagePassword:''});
+    }
+    return isHasError;
   }
 
   handleCheckboxChange = (id) => {
@@ -79,6 +159,9 @@ class HospitalAccountEditor extends Component {
 
   handleSaveConfirmation = (isActive) => {
     this.changeErrorMessage('');
+     if(this.handleCheckTextValue()){
+      return false;
+    }
     this.setState({isSaveDialogActive:isActive});
   }
 
@@ -156,6 +239,14 @@ class HospitalAccountEditor extends Component {
 
   handleCancel = () => {
     this.changeErrorMessage('');
+    this.setState({
+      errorMessageHospitalCode:'',
+      errorMessagerHospitalName:'',
+      errorMessageLocalityCode:'',
+      errorMessageDisplayName:'',
+      errorMessageMailAddress:'',
+      errorMessagePassword:''
+    });
     this.props.hideDialog();
   }
 
@@ -171,27 +262,39 @@ class HospitalAccountEditor extends Component {
                 </tr>
                 <tr>
                   <td>■ 医療機関コード</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.hospitalCode} onChange={this.handleChange.bind(this, 'hospitalCode')} /></td> 
+                  <td><input type="text" className={HospitalCss.text} value={this.state.hospitalCode} onChange={this.handleChange.bind(this, 'hospitalCode')} /><br/>
+                      <span className={HospitalCss.errorMessage}>{this.state.errorMessageHospitalCode}</span>
+                  </td> 
                 </tr>
                 <tr>
                   <td>■ 医療機関名</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.hospitalName} onChange={this.handleChange.bind(this, 'hospitalName')} /></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.hospitalName} onChange={this.handleChange.bind(this, 'hospitalName')} /><br/>
+                      <span className={HospitalCss.errorMessage}>{this.state.errorMessagerHospitalName}</span>
+                  </td>    
                 </tr>
                 <tr>
                   <td>■ 管轄自治体コード</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /><br/>
+                      <span className={HospitalCss.errorMessage}>{this.state.errorMessageLocalityCode}</span>
+                  </td>    
                 </tr>
                 <tr>
                   <td>■ アカウント名</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this,'displayName')}/></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this,'displayName')}/><br/>
+                      <span className={HospitalCss.errorMessage}>{this.state.errorMessageDisplayName}</span>
+                  </td>    
                 </tr>
                 <tr>
                   <td>■ ログインID</td>
-                  <td><input type="text" className={HospitalCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this,'mailAddress')}/></td>    
+                  <td><input type="text" className={HospitalCss.text} value={this.state.mailAddress} onChange={this.handleChange.bind(this,'mailAddress')}/><br/>
+                      <span className={HospitalCss.errorMessage}>{this.state.errorMessageMailAddress}</span>
+                  </td>    
                 </tr>
                 <tr>
                   <td>■ パスワード</td>
-                  <td><input type="password" className={HospitalCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/></td>
+                  <td><input type="password" className={HospitalCss.text} value={this.state.password} onChange={this.handleChange.bind(this,'password')}/><br/>
+                      <span className={HospitalCss.errorMessage}>{this.state.errorMessagePassword}</span>
+                  </td>
                 </tr>
                 <tr>
                   <td>■ 権限</td>

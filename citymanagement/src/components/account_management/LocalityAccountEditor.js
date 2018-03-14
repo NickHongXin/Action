@@ -20,7 +20,13 @@ class LocalityAccountEditor extends Component {
      		mailAddress:'',
       		password:'123456',
       		localityUserId:0,
-		    localityUserPermissions:[]
+		    localityUserPermissions:[],
+      		errorMessage:'',
+      		errorMessageLocalityName:'',
+      		errorMessageLocalityCode:'',
+      		errorMessageDisplayName:'',
+      		errorMessageMailAddress:'',
+      		errorMessagePassword:''
 	    }
 	}
 
@@ -40,7 +46,72 @@ class LocalityAccountEditor extends Component {
 
 	
 	handleChange = (name, event) => {
-		this.setState({[name]: event.target.value})
+		this.setState({[name]: event.target.value});
+		if(event.target.value !== '' && event.target.value !== null){
+			switch(name) {
+				case 'localityCode' :
+					this.setState({errorMessageLocalityCode:''});
+					break;
+				case 'localityName' :
+					this.setState({errorMessageLocalityName:''});
+					break;
+				case 'displayName' :
+					this.setState({errorMessageDisplayName:''});
+					break;
+				case 'password' :
+					this.setState({errorMessagePassword:''});
+					break;
+				case 'loginUserId':
+					if(!this.state.loginUserId.match(/^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/i)){
+						this.setState({errorMessageMailAddress: '電子メールでなければなりません'});
+					}else{
+						this.setState({errorMessageMailAddress:''});
+					}
+					break;
+				default :
+					break;
+			}
+		}
+	}
+
+	handleCheckTextValue = () => {
+		let isHasError = false;
+		if(this.state.localityCode === '' || this.state.localityCode === null){
+			this.setState({errorMessageLocalityCode: '自治体コード は空です'});
+			isHasError= true;
+		}else{
+			this.setState({errorMessageLocalityCode: ''});
+		}
+		if(this.state.localityName === '' || this.state.localityName === null){
+			this.setState({errorMessageLocalityName: '自治体名 は空です'});
+			isHasError= true;
+		}else{
+			this.setState({errorMessageLocalityName: ''});
+		}
+		if(this.state.displayName === '' || this.state.displayName === null){
+			this.setState({errorMessageDisplayName: 'アカウント名 は空です'});
+			isHasError= true;
+		}else{
+			this.setState({errorMessageDisplayName:''});
+		}
+		if(this.state.loginUserId === '' || this.state.loginUserId === null){
+			this.setState({errorMessageMailAddress: 'ログインID は空です'});
+			isHasError= true;
+		}else{
+			if(!this.state.loginUserId.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)){
+				this.setState({errorMessageMailAddress: '電子メールでなければなりません'});
+				isHasError= true;
+			}else{
+				this.setState({errorMessageMailAddress:''});
+			}
+		}
+		if(this.state.password ==='' || this.state.password === null){
+			this.setState({errorMessagePassword:'パスワード は空です'});
+			isHasError= true;
+		}else{
+			this.setState({errorMessagePassword:''});
+		}
+		return isHasError;
 	}
 
 	handleCheckboxChange = (id) => {
@@ -83,10 +154,21 @@ class LocalityAccountEditor extends Component {
 
 	handleCancel = () => {
 	    this.changeErrorMessage('');
+	    this.setState({
+	    	errorMessageLocalityCode:'',
+	    	errorMessageLocalityName:'',
+	    	errorMessageDisplayName:'',
+	    	errorMessageMailAddress:'',
+	    	errorMessagePassword:''
+	    });
 	    this.props.hideDialog();
 	  }
 
 	handleSaveConfirmation = (isActive) => {
+		this.changeErrorMessage('');
+		if(this.handleCheckTextValue()){
+			return false;
+		}
 	    this.setState({isSaveDialogActive:isActive});
   	}
 
@@ -174,23 +256,34 @@ class LocalityAccountEditor extends Component {
 	                </tr>
 	                <tr>
 	                    <td>■ 自治体コード</td>
-	                    <td><input type="text" className={LocalityCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /></td> 
+	                    <td><input type="text" className={LocalityCss.text} value={this.state.localityCode} onChange={this.handleChange.bind(this, 'localityCode')} /><br/>
+	                    	<span className={LocalityCss.errorMessage}>{this.state.errorMessageLocalityCode}</span>
+	                    </td>
 	                </tr>
+	                
 	                <tr>
 	                    <td>■ 自治体名</td>
-	                    <td><input type="text" className={LocalityCss.text} value={this.state.localityName} onChange={this.handleChange.bind(this, 'localityName')} /></td>    
+	                    <td><input type="text" className={LocalityCss.text} value={this.state.localityName} onChange={this.handleChange.bind(this, 'localityName')} /><br/>
+	                    	<span className={LocalityCss.errorMessage}>{this.state.errorMessageLocalityName}</span>
+	                    </td> 	
 	                </tr>
 	                <tr>
 	                    <td>■ アカウント名</td>
-	                    <td><input type="text" className={LocalityCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this, 'displayName')} /></td>
+	                    <td><input type="text" className={LocalityCss.text} value={this.state.displayName} onChange={this.handleChange.bind(this, 'displayName')} /><br/>
+	                    	<span className={LocalityCss.errorMessage}>{this.state.errorMessageDisplayName}</span>
+	                    </td>
 	                </tr>
 	                <tr>
 	                    <td>■ ログインID</td>
-	                    <td><input type="text" className={LocalityCss.text} value={this.state.loginUserId} onChange={this.handleChange.bind(this, 'loginUserId')} /></td>    
+	                    <td><input type="text" className={LocalityCss.text} value={this.state.loginUserId} onChange={this.handleChange.bind(this, 'loginUserId')} /><br/>
+	                    	<span className={LocalityCss.errorMessage}>{this.state.errorMessageMailAddress}</span>
+	                    </td>
 	                </tr>
 	                <tr>
 	                    <td>■ パスワード</td>
-	                    <td><input type="text" className={LocalityCss.text} value={this.state.password} onChange={this.handleChange.bind(this, 'password')} /></td>
+	                    <td><input type="text" className={LocalityCss.text} value={this.state.password} onChange={this.handleChange.bind(this, 'password')} /><br/>
+	                    	<span className={LocalityCss.errorMessage}>{this.state.errorMessagePassword}</span>
+	                    </td>
 	                </tr>
 	                <tr>
 	                    <td>■ 権限</td>
@@ -206,7 +299,7 @@ class LocalityAccountEditor extends Component {
                     				</div>)
 	                    		})
 	                    	}
-	                    </td>    
+	                    </td>
 	                </tr>
 	                <tr></tr>
 	                <tr>

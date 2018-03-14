@@ -29,6 +29,7 @@ input[type="button"]{
     border-color:#000000;
     border-width: 1px;
     outline:none;
+    width: 80%;
 }
 
 .errorMessage {
