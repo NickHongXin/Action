@@ -3,13 +3,14 @@ import Logo from './components/account_management/Logo';
 import { Button } from 'react-toolbox/lib/button';
 import theme from './css/login.css';
 import * as Api from './common/ApiCaller';
+import * as Constants from './common/Constants';
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mailAddress: '',
-      password: ''
+      mailAddress: Constants.EMPTY_STRING,
+      password: Constants.EMPTY_STRING
     };
   }
 

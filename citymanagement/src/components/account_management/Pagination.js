@@ -1,20 +1,17 @@
 import React,{ Component } from 'react';
 import PaginationStyle from '../../css/pagination.css';
+import * as Constants from '../../common/Constants';
 
-const LEFT_LINK_DISABLE = 'link_left_disable';
-const RIGHT_LINK_DISABLE = 'link_right_disable';
-const TEXTLINK_DISABLE = 'textlink_disable';
-
-class Pagination extends Component{
-	constructor(props){
+class Pagination extends Component {
+	constructor(props) {
 		super(props);
-		this.state={
-			totalPage:0,
-			currentPage:1,
-			leftLinkDisable:'',
-			rightLinkDisable:'',
-			textlinkDisable:''
-		}
+		this.state = {
+			totalPage: 0,
+			currentPage: 1,
+			leftLinkDisable: Constants.EMPTY_STRING,
+			rightLinkDisable: Constants.EMPTY_STRING,
+			textlinkDisable: Constants.EMPTY_STRING
+		};
 	}
 
 	componentWillReceiveProps = (nextProps) => {
@@ -22,9 +19,9 @@ class Pagination extends Component{
 		this.setState({
 			totalPage: totalPage,
 			currentPage: currentPage,
-			leftLinkDisable: currentPage === 1 ? LEFT_LINK_DISABLE : '',
-			rightLinkDisable: currentPage === totalPage ? RIGHT_LINK_DISABLE : '',
-			textlinkDisable: currentPage === this.state.currentPage ? TEXTLINK_DISABLE : ''
+			leftLinkDisable: currentPage === 1 ? Constants.LEFT_LINK_DISABLE : Constants.EMPTY_STRING,
+			rightLinkDisable: currentPage === totalPage ? Constants.RIGHT_LINK_DISABLE : Constants.EMPTY_STRING,
+			textlinkDisable: currentPage === this.state.currentPage ? Constants.TEXTLINK_DISABLE : Constants.EMPTY_STRING
 		});
 	}
 
@@ -52,16 +49,16 @@ class Pagination extends Component{
 
 	render() {
 		let pageNoList = [];
-		for(let i=0; i<this.state.totalPage; i++) {
-      		pageNoList.push(<li key={i+1} className={this.state.currentPage === i+1 ? PaginationStyle[this.state.textlinkDisable] : ''}>
-	      		<a onClick={this.choosePage.bind(this, i+1)}>{i+1}</a></li>);
+		for(let i = 1; i <= this.state.totalPage; i++) {
+      		pageNoList.push(<li key={i} className={this.state.currentPage === i ? PaginationStyle[this.state.textlinkDisable] : Constants.EMPTY_STRING}>
+	      		<a onClick={this.choosePage.bind(this, i)}>{i}</a></li>);
       	}
 		
 		return(	
          	<div>
          		{
          			this.state.totalPage === 0 
-         			? ''
+         			? Constants.EMPTY_STRING
          			: <div className={PaginationStyle.paging}>
 			              <ul className={PaginationStyle.link}>
 			                <li className={`${PaginationStyle.link_left} ${PaginationStyle[this.state.leftLinkDisable]}`}>
