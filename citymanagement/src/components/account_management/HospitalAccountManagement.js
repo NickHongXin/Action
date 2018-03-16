@@ -5,6 +5,10 @@ import HospitalAccountEditorTable from './HospitalAccountEditor';
 import * as Api from '../../common/ApiCaller';
 import * as Constants from '../../common/Constants';
 import Logout from '../function/Logout';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import PropTypes from 'prop-types';
+import * as hospitalAction from '../redux/action';
 
 class HospitalAccountManagement extends Component {
 	constructor(props) {
@@ -102,6 +106,11 @@ class HospitalAccountManagement extends Component {
 
 	componentDidMount = () => {
 		this.fetchHospitalAccounts(1);
+		this.props.hospitalActions.getHospitalAcoount({
+				hospitalName: this.state.searchCondition,
+				pageSize: Constants.PAGE_SIZE,
+				pageNo: this.state.currentPageNo
+			});
 	}
 
   	render(){
@@ -133,7 +142,7 @@ class HospitalAccountManagement extends Component {
 						</thead>
 						<tbody>
 							{
-								this.state.hospitalAccounts.map((item, idx) => (
+								this.props.hospitalAccountList.data.map((item, idx) => (
 									<tr key={idx}>
 										<td>{idx + 1}</td>
 										<td>{item.hospitalName}</td>
@@ -159,4 +168,12 @@ class HospitalAccountManagement extends Component {
   	}
 }
 
-export default HospitalAccountManagement;
+const mapStateToProps = (state) => {
+	return { hospitalAccountList: state.hospitalReducers.hospitalAccountList }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+	hospitalActions: bindActionCreators(hospitalAction, dispatch)
+})
+
+export  default connect(mapStateToProps, mapDispatchToProps)(HospitalAccountManagement);
