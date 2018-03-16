@@ -58,29 +58,31 @@ class HospitalAccountEditor extends Component {
   }
 
   handleDeleteConfirmationYes = () => {
-    Api.deleteRequest(Constants.HOSPITAL_ACCOUNT_API_PATH,
-        {
-          hospitalUserId: this.state.hospitalUserId
-        })
-        .then((res) => {
-          Api.setToken(res.headers.authorization);
-          this.handleDeleteConfirmation(false);
-          this.props.hideDialog(false);
-          this.props.handleSearch(1);
-        })
-        .catch((error) => {
-          if (error.response) {
-            if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
-              Logout.bind(this)();
-            } else {
-              if (error.response.headers && error.response.headers.authorization) {
-                Api.setToken(error.response.headers.authorization);
-              }
-              this.handleDeleteConfirmation(false);
-              this.changeErrorMessage(error.response.data);
-            }
-          }
-      }); 
+    // Api.deleteRequest(Constants.HOSPITAL_ACCOUNT_API_PATH,
+    //     {
+    //       hospitalUserId: this.state.hospitalUserId
+    //     })
+    //     .then((res) => {
+    //       Api.setToken(res.headers.authorization);
+    //       this.handleDeleteConfirmation(false);
+    //       this.props.hideDialog(false);
+    //       this.props.handleSearch(1);
+    //     })
+    //     .catch((error) => {
+    //       if (error.response) {
+    //         if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
+    //           Logout.bind(this)();
+    //         } else {
+    //           if (error.response.headers && error.response.headers.authorization) {
+    //             Api.setToken(error.response.headers.authorization);
+    //           }
+    //           this.handleDeleteConfirmation(false);
+    //           this.changeErrorMessage(error.response.data);
+    //         }
+    //       }
+    //   });
+        this.props.hospitalActions.deletedHospitalUser({ hospitalUserId: this.state.hospitalUserId});
+        this.handleSaveSuccess();
   }
 
   handleSaveConfirmation = (isActive) => {
@@ -92,49 +94,82 @@ class HospitalAccountEditor extends Component {
   }
 
   handleSaveConfirmationYes = () => {
+    //debugger;
     const hospitalPermissionIds = [];
     this.state.hospitalUserPermissions.map(item => {
       if (item.isChecked) {
         hospitalPermissionIds.push(item.hospitalPermissionId);
       }
     });
-    this.props.isEditMode ? 
-      Api.putRequest(
-        Constants.HOSPITAL_ACCOUNT_API_PATH, 
-        {
-          hospitalId: this.state.hospitalId,
-          hospitalCode: this.state.hospitalCode,
-          hospitalName: this.state.hospitalName,
-          localityCode: this.state.localityCode,
-          displayName: this.state.displayName,
-          mailAddress: this.state.mailAddress,
-          password: this.state.password,
-          hospitalUserId: this.state.hospitalUserId,
-          hospitalPermissionIds: hospitalPermissionIds
-        })
-        .then(res => this.handleSaveSuccess(res))
-        .catch(err => this.handleSaveError(err))
-    : Api.postRequest(
-        Constants.HOSPITAL_ACCOUNT_API_PATH, 
-        {
-          hospitalCode: this.state.hospitalCode,
-          hospitalName: this.state.hospitalName,
-          localityCode: this.state.localityCode,
-          displayName: this.state.displayName,
-          mailAddress: this.state.mailAddress,
-          password: this.state.password,
-          hospitalPermissionIds: hospitalPermissionIds
-        })
-        .then(res => this.handleSaveSuccess(res))
-        .catch(err => this.handleSaveError(err));
+    // this.props.isEditMode ? 
+    //   Api.putRequest(
+    //     Constants.HOSPITAL_ACCOUNT_API_PATH, 
+    //     {
+    //       hospitalId: this.state.hospitalId,
+    //       hospitalCode: this.state.hospitalCode,
+    //       hospitalName: this.state.hospitalName,
+    //       localityCode: this.state.localityCode,
+    //       displayName: this.state.displayName,
+    //       mailAddress: this.state.mailAddress,
+    //       password: this.state.password,
+    //       hospitalUserId: this.state.hospitalUserId,
+    //       hospitalPermissionIds: hospitalPermissionIds
+    //     })
+    //     .then(res => this.handleSaveSuccess(res))
+    //     .catch(err => this.handleSaveError(err))
+    // : Api.postRequest(
+    //     Constants.HOSPITAL_ACCOUNT_API_PATH, 
+    //     {
+    //       hospitalCode: this.state.hospitalCode,
+    //       hospitalName: this.state.hospitalName,
+    //       localityCode: this.state.localityCode,
+    //       displayName: this.state.displayName,
+    //       mailAddress: this.state.mailAddress,
+    //       password: this.state.password,
+    //       hospitalPermissionIds: hospitalPermissionIds
+    //     })
+    //     .then(res => this.handleSaveSuccess(res))
+    //     .catch(err => this.handleSaveError(err));
+      if(this.props.isEditMode){
+         this.props.hospitalActions.updateHospitalUser({
+            hospitalId: this.state.hospitalId,
+            hospitalCode: this.state.hospitalCode,
+            hospitalName: this.state.hospitalName,
+            localityCode: this.state.localityCode,
+            displayName: this.state.displayName,
+            mailAddress: this.state.mailAddress,
+            password: this.state.password,
+            hospitalUserId: this.state.hospitalUserId,
+            hospitalPermissionIds: hospitalPermissionIds
+         });
+         this.handleSaveSuccess();
+      }else{
+        this.props.hospitalActions.addHospitalUser({
+            hospitalCode: this.state.hospitalCode,
+            hospitalName: this.state.hospitalName,
+            localityCode: this.state.localityCode,
+            displayName: this.state.displayName,
+            mailAddress: this.state.mailAddress,
+            password: this.state.password,
+            hospitalPermissionIds: hospitalPermissionIds
+        });
+        this.handleSaveSuccess();
+        console.log(this.props.status);
+      }
   }
 
-  handleSaveSuccess = (res) => {
-    Api.setToken(res.headers.authorization);
+  handleSaveSuccess = () => {
     this.handleSaveConfirmation(false);
     this.props.hideDialog(false);
     this.props.handleSearch(1);
   }
+
+  // handleSaveSuccess = (res) => {
+  //   Api.setToken(res.headers.authorization);
+  //   this.handleSaveConfirmation(false);
+  //   this.props.hideDialog(false);
+  //   this.props.handleSearch(1);
+  // }
 
   handleSaveError = (error) => {
     if (error.response) {
@@ -267,7 +302,7 @@ class HospitalAccountEditor extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { }
+  return {status : state.hospitalReducers.status }
 }
 
 const mapDispatchToProps = (dispatch) => ({

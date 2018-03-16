@@ -1,6 +1,6 @@
 export const API_ACCOUNT_API_PATH = '/api/account';
 
-export const PAGE_SIZE = 3;
+export const PAGE_SIZE = 25;
 
 export const EMPTY_STRING = '';
 
