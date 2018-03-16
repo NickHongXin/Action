@@ -9,6 +9,10 @@ import * as Constants from '../../common/Constants';
 import Logout from '../function/Logout';
 import {withRouter} from 'react-router-dom';
 import * as Validations from '../function/Validate';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import PropTypes from 'prop-types';
+import * as hospitalAction from '../redux/action';
 
 class HospitalAccountEditor extends Component {
   constructor(props) {
@@ -262,4 +266,12 @@ class HospitalAccountEditor extends Component {
   }
 }
 
-export default withRouter(HospitalAccountEditor);
+const mapStateToProps = (state) => {
+  return { }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  hospitalActions: bindActionCreators(hospitalAction, dispatch)
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HospitalAccountEditor));

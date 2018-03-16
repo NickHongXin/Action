@@ -3,6 +3,8 @@ import * as Api from '../../common/ApiCaller';
 
 export const FETCHHOSPITALACCOUNTS = 'fetchHospitalAccounts';
 
+export const POSTHOSPITALUSER = 'postHospitalUser';
+
 export function fetchHospitalAccounts (data) {
 	return {
 		type : FETCHHOSPITALACCOUNTS,
@@ -16,4 +18,11 @@ export function getHospitalAcoount (item) {
 			.then(res => dispatch(fetchHospitalAccounts(res.data)))
 			.catch(err => console.log(err))
 	}	
+}
+
+export function postHospitalUser(item) {
+	return {
+		type : POSTHOSPITALUSER,
+		item
+	}
 }

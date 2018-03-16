@@ -31,7 +31,7 @@ class HospitalAccountManagement extends Component {
 
 	convert = (item) => {
 		const hospitalUserPermissions = [];
-		this.state.hospitalPermissions.map(permission => {
+		this.props.hospitalAccountList.hospitalPermissions.map(permission => {
 			let hosiptalPermission = Object.assign({}, permission);
 			hosiptalPermission['isChecked'] = false;
 			if (item && item.hospitalUserPermissions){
@@ -66,51 +66,75 @@ class HospitalAccountManagement extends Component {
 	    this.setState({[name]: event.target.value});
   	}
 
-  	fetchHospitalAccounts = (currentPage) => {
-  		Api.getRequest(
-			Constants.HOSPITAL_ACCOUNT_API_PATH, 
-			{
-				hospitalName: this.state.searchCondition,
-				pageSize: Constants.PAGE_SIZE,
-				pageNo: currentPage
-			})
-			.then(res => {
-				let totalCount = res.data.totalCount;
-				let totalPage = Math.floor(totalCount === 0 ? 0 : totalCount / Constants.PAGE_SIZE + (totalCount % Constants.PAGE_SIZE > 0 ? 1 : 0));
-				this.setState({
-					hospitalAccounts: res.data.data,
-					hospitalPermissions: res.data.hospitalPermissions,
-					totalPage: totalPage
-				});
-				Api.setToken(res.headers.authorization);
-			})
-			.catch(error => {
-				if (error.response) {
-					if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
-			        	Logout.bind(this)();
-			    	} else {
-			    		if (error.response.headers && error.response.headers.authorization) {
-			            	Api.setToken(error.response.headers.authorization);
-			          	}
-			    	}
-		      	}
-			});
-  	}
+  	// fetchHospitalAccounts = (currentPage) => {
+  	// 	Api.getRequest(
+			// Constants.HOSPITAL_ACCOUNT_API_PATH, 
+			// {
+			// 	hospitalName: this.state.searchCondition,
+			// 	pageSize: Constants.PAGE_SIZE,
+			// 	pageNo: currentPage
+			// })
+			// .then(res => {
+			// 	let totalCount = res.data.totalCount;
+			// 	let totalPage = Math.floor(totalCount === 0 ? 0 : totalCount / Constants.PAGE_SIZE + (totalCount % Constants.PAGE_SIZE > 0 ? 1 : 0));
+			// 	this.setState({
+			// 		hospitalAccounts: res.data.data,
+			// 		hospitalPermissions: res.data.hospitalPermissions,
+			// 		totalPage: totalPage
+			// 	});
+			// 	Api.setToken(res.headers.authorization);
+			// })
+			// .catch(error => {
+			// 	if (error.response) {
+			// 		if (error.response.status === Constants.HTTP_STATUS_CODE_UNAUTHORIZED) {
+			//         	Logout.bind(this)();
+			//     	} else {
+			//     		if (error.response.headers && error.response.headers.authorization) {
+			//             	Api.setToken(error.response.headers.authorization);
+			//           	}
+			//     	}
+		 //      	}
+			// });
+  	// }
 
   	handleSearch = (currentPage) => {
-  		this.fetchHospitalAccounts(currentPage);
+  		// this.fetchHospitalAccounts(currentPage);
+  		// debugger;
+  		this.props.hospitalActions.getHospitalAcoount({
+  			hospitalName: this.state.searchCondition,
+			pageSize: Constants.PAGE_SIZE,
+			pageNo: currentPage
+  		});
   		this.setState({
   			currentPageNo: currentPage
   		});
+  		
+  	}
+
+
+  	// getPageInformationAndSearchCondition = () => {
+  	// 	return {
+  	// 		hospitalName: this.state.searchCondition,
+			// pageSize: Constants.PAGE_SIZE,
+			// pageNo: this.state.currentPageNo
+  	// 	}
+  	// }
+
+  	componentWillReceiveProps = (nextProps) => {
+  		let totalCount = nextProps.hospitalAccountList.totalCount;
+		let totalPage = Math.floor(totalCount === 0 ? 0 : totalCount / Constants.PAGE_SIZE + (totalCount % Constants.PAGE_SIZE > 0 ? 1 : 0));
+		this.setState({
+				totalPage: totalPage
+			});
   	}
 
 	componentDidMount = () => {
-		this.fetchHospitalAccounts(1);
+		//this.fetchHospitalAccounts(1);
 		this.props.hospitalActions.getHospitalAcoount({
-				hospitalName: this.state.searchCondition,
-				pageSize: Constants.PAGE_SIZE,
-				pageNo: this.state.currentPageNo
-			});
+  			hospitalName: this.state.searchCondition,
+			pageSize: Constants.PAGE_SIZE,
+			pageNo: this.state.currentPageNo
+  		});
 	}
 
   	render(){
