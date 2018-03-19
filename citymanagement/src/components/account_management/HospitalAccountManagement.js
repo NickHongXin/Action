@@ -5,6 +5,11 @@ import HospitalAccountEditorTable from './HospitalAccountEditor';
 import * as Api from '../../common/ApiCaller';
 import * as Constants from '../../common/Constants';
 import Logout from '../function/Logout';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import PropTypes from 'prop-types';
+import * as hospitalAction from '../redux/HospitalAccountAction';
+
 
 class HospitalAccountManagement extends Component {
 	constructor(props) {
@@ -27,7 +32,7 @@ class HospitalAccountManagement extends Component {
 
 	convert = (item) => {
 		const hospitalUserPermissions = [];
-		this.state.hospitalPermissions.map(permission => {
+		this.props.hospitalAccountListReducers.hospitalPermissions.map(permission => {
 			let hosiptalPermission = Object.assign({}, permission);
 			hosiptalPermission['isChecked'] = false;
 			if (item && item.hospitalUserPermissions){
@@ -62,7 +67,7 @@ class HospitalAccountManagement extends Component {
 	    this.setState({[name]: event.target.value});
   	}
 
-  	fetchHospitalAccounts = (currentPage) => {
+ 	/*fetchHospitalAccounts = (currentPage) => {
   		Api.getRequest(
 			Constants.HOSPITAL_ACCOUNT_API_PATH, 
 			{
@@ -91,18 +96,43 @@ class HospitalAccountManagement extends Component {
 			    	}
 		      	}
 			});
-  	}
-
+  	}*/
+     
+   
   	handleSearch = (currentPage) => {
-  		this.fetchHospitalAccounts(currentPage);
+  		this.props.hospitalActions.getHospitalAcoount(
+		{
+			hospitalName: this.state.searchCondition,
+			pageSize: Constants.PAGE_SIZE,
+			pageNo: currentPage
+
+		});
   		this.setState({
   			currentPageNo: currentPage
   		});
   	}
 
 	componentDidMount = () => {
-		this.fetchHospitalAccounts(1);
+		
+		this.props.hospitalActions.getHospitalAcoount(
+		{
+			hospitalName: this.state.searchCondition,
+			pageSize: Constants.PAGE_SIZE,
+			pageNo: this.state.currentPageNo
+
+		});
 	}
+	componentWillReceiveProps =(nextProps) =>
+	{
+		let totalCount=nextProps.hospitalAccountListReducers.totalCount;
+		let totalPage=Math.floor(totalCount === 0 ? 0 : totalCount / Constants.PAGE_SIZE + (totalCount % Constants.PAGE_SIZE > 0 ? 1 : 0));
+        this.setState(
+        {
+        	totalPage:totalPage
+
+        });
+	}
+	
 
   	render(){
 	    return (
@@ -133,7 +163,7 @@ class HospitalAccountManagement extends Component {
 						</thead>
 						<tbody>
 							{
-								this.state.hospitalAccounts.map((item, idx) => (
+								this.props.hospitalAccountListReducers.data.map((item, idx) => (
 									<tr key={idx}>
 										<td>{idx + 1}</td>
 										<td>{item.hospitalName}</td>
@@ -159,4 +189,12 @@ class HospitalAccountManagement extends Component {
   	}
 }
 
-export default HospitalAccountManagement;
+const mapStateToProps = (state) => {
+    return { hospitalAccountListReducers: state.hospitalReducers.hospitalAccountList }//自动对应到index中的hospitalReducers
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    hospitalActions: bindActionCreators(hospitalAction, dispatch)
+})
+
+export  default connect(mapStateToProps, mapDispatchToProps)(HospitalAccountManagement);

@@ -9,6 +9,9 @@ import Logout from '../function/Logout';
 import * as Api from '../../common/ApiCaller';
 import {withRouter} from 'react-router-dom';
 import * as Validations from '../function/Validate';
+import * as localityAction from '../redux/LocalityAccountAction';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 class LocalityAccountEditor extends Component {
 	constructor(props) {
@@ -53,7 +56,7 @@ class LocalityAccountEditor extends Component {
   	}
 
   	handleDeleteConfirmationYes = () => {
-  		Api.deleteRequest(Constants.LOCALITY_ACCOUNT_API_PATH,
+  		/*Api.deleteRequest(Constants.LOCALITY_ACCOUNT_API_PATH,
   			{
   				localityUserId: this.state.localityUserId
   			})
@@ -75,7 +78,15 @@ class LocalityAccountEditor extends Component {
 	              this.changeErrorMessage(error.response.data);
 	            }
 	          }
-	      }); 
+	      }); */
+	      alert(this.state.localityUserId);
+	      this.props.localityActions.deleteLocalityAccount(
+	      {
+	      	localityUserId: this.state.localityUserId
+	      })
+	       this.handleSaveConfirmation(false);
+	       this.props.hideDialog(false);
+	       this.props.handleSearch(1);
   	}
 
 	handleSaveConfirmation = (isActive) => {
@@ -93,8 +104,9 @@ class LocalityAccountEditor extends Component {
 	        localityPermissionIds.push(item.localityPermissionId);
 	      }
 	    });
-	    this.props.isEditMode ? 
-	      Api.putRequest(
+	    if(this.props.isEditMode )
+	    {
+	    	/*Api.putRequest(
 	        Constants.LOCALITY_ACCOUNT_API_PATH, 
 	        {
 	          localityId: this.state.localityId,
@@ -107,8 +119,40 @@ class LocalityAccountEditor extends Component {
 	          localityPermissionIds: localityPermissionIds
 	        })
 	        .then(res => this.handleSaveSuccess(res))
-	        .catch(err => this.handleSaveError(err))
-	    : Api.postRequest(
+	        .catch(err => this.handleSaveError(err))*/
+	        this.props.localityActions.updateLocalityAccount({
+	          localityId: this.state.localityId,
+	          localityCode: this.state.localityCode,
+	          localityName: this.state.localityName,
+	          displayName: this.state.displayName,
+	          mailAddress: this.state.loginUserId,
+	          password: this.state.password,
+	          localityUserId: this.state.localityUserId,
+	          localityPermissionIds: localityPermissionIds
+
+	        });
+	         this.handleSaveConfirmation(false);
+	         this.props.hideDialog(false);
+	         this.props.handleSearch(1); 
+	    }
+	    else{
+	    	this.props.localityActions.addLocalityAccount({
+	    	  localityCode: this.state.localityCode,
+	          localityName: this.state.localityName,
+	          displayName: this.state.displayName,
+	          mailAddress: this.state.loginUserId,
+	          password: this.state.password,
+	          localityPermissionIds: localityPermissionIds
+	    	});
+	    	 this.handleSaveConfirmation(false);
+	         this.props.hideDialog(false);
+	         this.props.handleSearch(1); 
+	    	}
+	    }
+	      
+	    	
+	   
+	    /*: Api.postRequest(
 	        Constants.LOCALITY_ACCOUNT_API_PATH, 
 	        {
 	          localityCode: this.state.localityCode,
@@ -120,7 +164,7 @@ class LocalityAccountEditor extends Component {
 	        })
 	        .then(res => this.handleSaveSuccess(res))
 	        .catch(err => this.handleSaveError(err));
-  	}
+  	}*/
 
   	handleSaveSuccess = (res) => {
 	    Api.setToken(res.headers.authorization);
@@ -252,5 +296,11 @@ class LocalityAccountEditor extends Component {
     );
   }
 }
+const mapStateToProps =(state) =>{
+	return{}
+}
+const mapDispatchToProps =(dispatch) =>({
+	localityActions:bindActionCreators(localityAction,dispatch)
+})
 
-export default withRouter(LocalityAccountEditor);
+export default withRouter(connect(mapStateToProps,mapDispatchToProps)(LocalityAccountEditor));

@@ -9,6 +9,9 @@ import * as Constants from '../../common/Constants';
 import Logout from '../function/Logout';
 import {withRouter} from 'react-router-dom';
 import * as Validations from '../function/Validate';
+import * as hospitalAction from '../redux/HospitalAccountAction';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
 class HospitalAccountEditor extends Component {
   constructor(props) {
@@ -54,7 +57,7 @@ class HospitalAccountEditor extends Component {
   }
 
   handleDeleteConfirmationYes = () => {
-    Api.deleteRequest(Constants.HOSPITAL_ACCOUNT_API_PATH,
+   /* Api.deleteRequest(Constants.HOSPITAL_ACCOUNT_API_PATH,
         {
           hospitalUserId: this.state.hospitalUserId
         })
@@ -76,7 +79,17 @@ class HospitalAccountEditor extends Component {
               this.changeErrorMessage(error.response.data);
             }
           }
-      }); 
+      }); */
+      this.props.hospitalActions.deleteHospitalUser(
+      {
+        hospitalUserId: this.state.hospitalUserId
+
+      })
+
+          this.handleDeleteConfirmation(false);
+          this.props.hideDialog(false);
+          this.props.handleSearch(1);
+      
   }
 
   handleSaveConfirmation = (isActive) => {
@@ -94,8 +107,8 @@ class HospitalAccountEditor extends Component {
         hospitalPermissionIds.push(item.hospitalPermissionId);
       }
     });
-    this.props.isEditMode ? 
-      Api.putRequest(
+    if(this.props.isEditMode) {
+     /* Api.putRequest(
         Constants.HOSPITAL_ACCOUNT_API_PATH, 
         {
           hospitalId: this.state.hospitalId,
@@ -109,8 +122,28 @@ class HospitalAccountEditor extends Component {
           hospitalPermissionIds: hospitalPermissionIds
         })
         .then(res => this.handleSaveSuccess(res))
-        .catch(err => this.handleSaveError(err))
-    : Api.postRequest(
+        .catch(err => this.handleSaveError(err))*/
+
+        this.props.hospitalActions.updateHospitalUser(
+        {
+           hospitalId: this.state.hospitalId,
+          hospitalCode: this.state.hospitalCode,
+          hospitalName: this.state.hospitalName,
+          localityCode: this.state.localityCode,
+          displayName: this.state.displayName,
+          mailAddress: this.state.mailAddress,
+          password: this.state.password,
+          hospitalUserId: this.state.hospitalUserId,
+          hospitalPermissionIds: hospitalPermissionIds
+          });
+        this.handleSaveConfirmation(false);
+        this.props.hideDialog(false);
+        this.props.handleSearch(1);
+    } 
+      // ? 
+      
+    // : 
+    /*Api.postRequest(
         Constants.HOSPITAL_ACCOUNT_API_PATH, 
         {
           hospitalCode: this.state.hospitalCode,
@@ -120,10 +153,25 @@ class HospitalAccountEditor extends Component {
           mailAddress: this.state.mailAddress,
           password: this.state.password,
           hospitalPermissionIds: hospitalPermissionIds
-        })
-        .then(res => this.handleSaveSuccess(res))
-        .catch(err => this.handleSaveError(err));
-  }
+        })*/
+        else {
+          this.props.hospitalActions.addHospitalUser(
+          {
+            hospitalCode: this.state.hospitalCode,
+            hospitalName: this.state.hospitalName,
+            localityCode: this.state.localityCode,
+            displayName: this.state.displayName,
+            mailAddress: this.state.mailAddress,
+            password: this.state.password,
+            hospitalPermissionIds: hospitalPermissionIds
+
+          });
+          this.handleSaveConfirmation(false);
+          this.props.hideDialog(false);
+          this.props.handleSearch(1);
+        }
+        
+    }
 
   handleSaveSuccess = (res) => {
     Api.setToken(res.headers.authorization);
@@ -262,4 +310,12 @@ class HospitalAccountEditor extends Component {
   }
 }
 
-export default withRouter(HospitalAccountEditor);
+const mapStateToProps = (state) => {
+    return {}
+}
+
+const mapDispatchToProps = (dispatch) => ({
+    hospitalActions: bindActionCreators(hospitalAction, dispatch)
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HospitalAccountEditor))

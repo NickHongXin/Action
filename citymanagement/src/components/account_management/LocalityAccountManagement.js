@@ -5,6 +5,11 @@ import LocalityAccountEditor from './LocalityAccountEditor';
 import * as Constants from '../../common/Constants';
 import * as Api from '../../common/ApiCaller';
 import Logout from '../function/Logout';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import PropTypes from 'prop-types';
+import * as localityAction from '../redux/LocalityAccountAction';
+
 
 class LocalityAccountManagement extends Component {
 	constructor(props) {
@@ -31,7 +36,7 @@ class LocalityAccountManagement extends Component {
 
   	convert = (item) => {
 		const localityUserPermissions = [];
-		this.state.localityPermissions.map(permission => {
+		this.props.localityAccountListReducers.localityPermissions.map(permission => {
 			let localityPermission = Object.assign({}, permission);
 			localityPermission['isChecked'] = false;
 			if (item && item.localityUserPermissions){
@@ -62,7 +67,7 @@ class LocalityAccountManagement extends Component {
         }, () => this.hideOrShowDialog(true));
   	}
 
-  	fetchLocalityAccounts = (currentPage) => {
+  	/*fetchLocalityAccounts = (currentPage) => {
   		Api.getRequest(
 			Constants.LOCALITY_ACCOUNT_API_PATH, 
 			{
@@ -91,17 +96,40 @@ class LocalityAccountManagement extends Component {
 			    	}
 		      	}
 			});
-  	}
+  	}*/
 
   	handleSearch = (currentPage) => {
-  		this.fetchLocalityAccounts(currentPage);
+  		//this.fetchLocalityAccounts(currentPage);
+  		this.props.localityActions.getLocalityAccount(
+  		{
+  			localityName:this.state.searchCondition,
+  			pageSize:Constants.PAGE_SIZE,
+  			pageNo:currentPage
+  		})
   		this.setState({
   			currentPageNo: currentPage
   		});
   	}
 
   	componentDidMount = () => {
-		this.fetchLocalityAccounts(1);
+		this.props.localityActions.getLocalityAccount(
+		{
+			localityName: this.state.searchCondition,
+			pageSize: Constants.PAGE_SIZE,
+			pageNo: this.state.currentPageNo
+
+		});
+	}
+
+	componentWillReceiveProps =(nextProps) =>
+	{
+		let totalCount=nextProps.localityAccountListReducers.totalCount;
+		let totalPage=Math.floor(totalCount === 0 ? 0 : totalCount / Constants.PAGE_SIZE + (totalCount % Constants.PAGE_SIZE > 0 ? 1 : 0));
+        this.setState(
+        {
+        	totalPage:totalPage
+
+        });
 	}
 
   	render(){
@@ -132,7 +160,7 @@ class LocalityAccountManagement extends Component {
 						</thead>
 						<tbody>
 							{
-								this.state.localityAccounts.map((item, idx) => (
+								this.props.localityAccountListReducers.data.map((item, idx) => (
 									<tr key={idx}>
 										<td>{idx + 1}</td>
 										<td>{item.localityName}</td>
@@ -157,4 +185,14 @@ class LocalityAccountManagement extends Component {
     }
 }
 
-export default LocalityAccountManagement;
+const mapStateToProps =(state) =>{
+	return { localityAccountListReducers:state.localityReducers.localityAccountList}
+
+}
+
+const mapDispatchToProps =(dispatch) =>(
+{
+	localityActions:bindActionCreators(localityAction,dispatch)
+})
+
+export default connect (mapStateToProps,mapDispatchToProps) (LocalityAccountManagement);
