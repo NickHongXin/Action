@@ -7,10 +7,14 @@ import {Provider} from 'react-redux';
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import reducers from './components/redux/reducer'
+import hospitalReducers from './components/redux/hospitalReducers';
+import localityReducers from './components/redux/localityReducers';
 
 const store = createStore(
-	combineReducers({hospitalReducers: reducers}),
+	combineReducers({
+		hospitalReducers: hospitalReducers,
+		localityReducers: localityReducers
+	}),
 	applyMiddleware(thunk, logger))
 
 ReactDOM.render(

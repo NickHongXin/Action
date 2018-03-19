@@ -12,7 +12,7 @@ import * as Validations from '../function/Validate';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import PropTypes from 'prop-types';
-import * as hospitalAction from '../redux/action';
+import * as hospitalAction from '../redux/hospitalActions';
 
 class HospitalAccountEditor extends Component {
   constructor(props) {
@@ -154,7 +154,7 @@ class HospitalAccountEditor extends Component {
             hospitalPermissionIds: hospitalPermissionIds
         });
         this.handleSaveSuccess();
-        console.log(this.props.status);
+        // console.log(this.props.status);
       }
   }
 

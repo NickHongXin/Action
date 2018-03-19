@@ -8,7 +8,7 @@ import Logout from '../function/Logout';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import PropTypes from 'prop-types';
-import * as hospitalAction from '../redux/action';
+import * as hospitalAction from '../redux/hospitalActions';
 
 class HospitalAccountManagement extends Component {
 	constructor(props) {

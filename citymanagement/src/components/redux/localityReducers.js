@@ -1,31 +1,31 @@
 import * as Constants from '../../common/Constants';
 import * as Api from '../../common/ApiCaller';
-import actionTypes from './action';
+// import actionTypes from './hospitalActions';
 
 
 let initState = {
-	hospitalAccountList :{
+	localityAccountList:{
 		totalCount:0,
 		data:[],
-		hospitalPermissions:[]
+		localityUserPermissions:[]
 	},
 	status:Constants.EMPTY_STRING
 }
 
-const hospitalReducers = (state = initState, action) => {
+const localityReducers = (state = initState, action) => {
 	
 	switch(action.type){
-		case 'fetchHospitalAccounts':
-			return {...state, hospitalAccountList:Object.assign({}, action.data)};
-		case 'addHospitalUser':
+		case 'fetchLocalityAccounts':
+			return {...state, localityAccountList:Object.assign({}, action.data)};
+		case 'postAddLocalityUser':
 			return {...state, status:Object.assign({}, action.data)};
-		case 'updateHospitalUser':
+		case 'putUpdateLocalityUser':
 			return {...state, status:Object.assign({}, action.data)};
-		case 'deleteHospitalUser':
+		case 'deletedLocalityUser':
 			return {...state, status:Object.assign({}, action.data)};
 		default:
 			return state;
 	}
 }
 
-export default hospitalReducers
+export default localityReducers

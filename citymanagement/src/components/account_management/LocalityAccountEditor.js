@@ -9,6 +9,10 @@ import Logout from '../function/Logout';
 import * as Api from '../../common/ApiCaller';
 import {withRouter} from 'react-router-dom';
 import * as Validations from '../function/Validate';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import PropTypes from 'prop-types';
+import * as localityAction from '../redux/localityActions';
 
 class LocalityAccountEditor extends Component {
 	constructor(props) {
@@ -23,12 +27,16 @@ class LocalityAccountEditor extends Component {
 		    loginUserId: Constants.EMPTY_STRING,
 		    password: Constants.EMPTY_STRING,
 		    localityUserId: 0,
-		    localityUserPermissions: []
+		    localityUserPermissions: [],
+		    status : Constants.EMPTY_STRING
 	    };
 	}
 
 	componentWillReceiveProps = (nextProps) =>{
 		this.setState(Object.assign({}, nextProps.accountInfo));
+		this.setState({
+			status : nextProps.status
+		})
 	}
 
 	handleChange = (name, event) => {
@@ -37,7 +45,7 @@ class LocalityAccountEditor extends Component {
 		this.setState({[name]: event.target.value});
 	}
 
-	handleCheckbox = (id) => {
+	handleCheckboxChange = (id) => {
 		this.state.localityUserPermissions.map((item)=>{
 			if (item.localityPermissionId === id) {
 				item.isChecked = !item.isChecked;
@@ -53,7 +61,7 @@ class LocalityAccountEditor extends Component {
   	}
 
   	handleDeleteConfirmationYes = () => {
-  		Api.deleteRequest(Constants.LOCALITY_ACCOUNT_API_PATH,
+  		/*Api.deleteRequest(Constants.LOCALITY_ACCOUNT_API_PATH,
   			{
   				localityUserId: this.state.localityUserId
   			})
@@ -75,7 +83,14 @@ class LocalityAccountEditor extends Component {
 	              this.changeErrorMessage(error.response.data);
 	            }
 	          }
-	      }); 
+	      });*/ 
+	    this.props.localityActions.deleteLocalityUser({
+	    	localityUserId: this.state.localityUserId
+	    });
+	    console.log(" result : " + this.props.status);
+	    this.handleDeleteConfirmation(false);
+      	this.props.hideDialog(false);
+      	this.props.handleSearch(1);
   	}
 
 	handleSaveConfirmation = (isActive) => {
@@ -93,33 +108,65 @@ class LocalityAccountEditor extends Component {
 	        localityPermissionIds.push(item.localityPermissionId);
 	      }
 	    });
-	    this.props.isEditMode ? 
-	      Api.putRequest(
-	        Constants.LOCALITY_ACCOUNT_API_PATH, 
-	        {
-	          localityId: this.state.localityId,
-	          localityCode: this.state.localityCode,
-	          localityName: this.state.localityName,
-	          displayName: this.state.displayName,
-	          mailAddress: this.state.loginUserId,
-	          password: this.state.password,
-	          localityUserId: this.state.localityUserId,
-	          localityPermissionIds: localityPermissionIds
-	        })
-	        .then(res => this.handleSaveSuccess(res))
-	        .catch(err => this.handleSaveError(err))
-	    : Api.postRequest(
-	        Constants.LOCALITY_ACCOUNT_API_PATH, 
-	        {
-	          localityCode: this.state.localityCode,
-	          localityName: this.state.localityName,
-	          displayName: this.state.displayName,
-	          mailAddress: this.state.loginUserId,
-	          password: this.state.password,
-	          localityPermissionIds: localityPermissionIds
-	        })
-	        .then(res => this.handleSaveSuccess(res))
-	        .catch(err => this.handleSaveError(err));
+	    // this.props.isEditMode ? 
+	    if(this.props.isEditMode){
+	    	/*Api.putRequest(
+		        Constants.LOCALITY_ACCOUNT_API_PATH, 
+		        {
+		          localityId: this.state.localityId,
+		          localityCode: this.state.localityCode,
+		          localityName: this.state.localityName,
+		          displayName: this.state.displayName,
+		          mailAddress: this.state.loginUserId,
+		          password: this.state.password,
+		          localityUserId: this.state.localityUserId,
+		          localityPermissionIds: localityPermissionIds
+		        })
+		        .then(res => this.handleSaveSuccess(res))
+		        .catch(err => this.handleSaveError(err))*/
+		    this.props.localityActions.updateLocalityUser({
+		    	localityId: this.state.localityId,
+		        localityCode: this.state.localityCode,
+		        localityName: this.state.localityName,
+		        displayName: this.state.displayName,
+		        mailAddress: this.state.loginUserId,
+		        password: this.state.password,
+		        localityUserId: this.state.localityUserId,
+		        localityPermissionIds: localityPermissionIds
+		    });
+		    console.log(" result : " + this.props.status);
+		    this.handleSaveConfirmation(false);
+		    this.props.hideDialog(false);
+		    this.props.handleSearch(1);
+	    }
+	      
+	    // : 
+	    else{
+	    	/*Api.postRequest(
+		        Constants.LOCALITY_ACCOUNT_API_PATH, 
+		        {
+		          localityCode: this.state.localityCode,
+		          localityName: this.state.localityName,
+		          displayName: this.state.displayName,
+		          mailAddress: this.state.loginUserId,
+		          password: this.state.password,
+		          localityPermissionIds: localityPermissionIds
+		        })
+		        .then(res => this.handleSaveSuccess(res))
+		        .catch(err => this.handleSaveError(err));*/
+		    this.props.localityActions.addLocalityUser({
+		    	localityCode: this.state.localityCode,
+		        localityName: this.state.localityName,
+		        displayName: this.state.displayName,
+		        mailAddress: this.state.loginUserId,
+		        password: this.state.password,
+		        localityPermissionIds: localityPermissionIds
+		    });
+		    this.handleSaveConfirmation(false);
+		    this.props.hideDialog(false);
+		    this.props.handleSearch(1);
+	    }
+	    
   	}
 
   	handleSaveSuccess = (res) => {
@@ -217,7 +264,7 @@ class LocalityAccountEditor extends Component {
 	                    			<div key={idx}>
 	                    				<input type='checkbox' 
 	                    					checked={item.isChecked}
-	                    					onChange={this.handleCheckbox.bind(this, item.localityPermissionId)}/>
+	                    					onChange={this.handleCheckboxChange.bind(this, item.localityPermissionId)}/>
 	                    				{item.localityPermissiondescription}<br/>
                     				</div>)
 	                    		})
@@ -253,4 +300,12 @@ class LocalityAccountEditor extends Component {
   }
 }
 
-export default withRouter(LocalityAccountEditor);
+const mapStateToProps = (state) => {
+  return {status : state.localityReducers.status }
+}
+
+const mapDispatchToProps = (dispatch) => ({
+  localityActions: bindActionCreators(localityAction, dispatch)
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(LocalityAccountEditor));
